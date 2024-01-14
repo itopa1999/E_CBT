@@ -1,0 +1,117 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+</style>
+
+<section class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
+        <ol>
+          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+          <li>Question</li>
+          <li></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <section class="inner-page">
+    <div class="container-fluid">
+        <div class="container">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addQuestion"><i class="bi bi-book-fill"></i>. Add Question</button>
+            <a href="{% url 'import-question' %}"><button type="button" class="btn btn-primary"><i class="bi bi-book-half"></i>. Import Questions</button></a>
+            <a href="#"><button data-bs-toggle="modal" data-bs-target="#deleteAllQuestion" type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i>. Reset all Question</button></a>
+          </div>
+        <div class="container">
+            {% if course %}
+            <div class="row col-lg-12">
+                {% for i in course %}
+                <div class="card col-lg-4 shadow border-0 mt-4 p-5">
+                    <div class="card-body">
+                        <center>
+                    <p class="text-muted">
+                        <i class="bi bi-book-fill" style="font-size:50px;" ></i>
+                    </p><br>
+                        <p style="font-size:30px; font-weight: bolder;" class="text-secondary">
+                                {{i.name}}
+                        </p>
+
+                        <p>
+                            <a href="{% url 'question-details' i.id %}">click Here to view this Course Questions</a>
+                    </p>
+                    
+                        </center>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+          <center><h2 style="font-weight: bolder;" class="text-danger mt-5"> NO QUESTION FOUND</h2></center>
+          {% endif %}
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="addQuestion" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Question</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'add-question' %}?next={{ request.GET.next }}">
+            {% csrf_token %}
+            <div class="mb-3 mt-3">
+                <select class="form-select" name='course' required>
+                  <option value="">Choose Course that owns this Question</option>
+                  {% for i in course %}
+                  <option value="{{i.name}}">{{i.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            <div class="mb-3 mt-3">
+              <input name ='mark' type="number" class="form-control" placeholder="Question mark" required>
+            </div>
+            <div class="mb-3 mt-3">
+              <textarea name ='question' class="form-control" placeholder="Type Question" required></textarea>
+            </div>
+            <div class="mb-3 mt-3">
+              <input name ='option1' type="text" class="form-control" placeholder="Option1" required>
+            </div>
+            <div class="mb-3 mt-3">
+                <input name ='option2' type="text" class="form-control" placeholder="Option2" required>
+              </div>
+              <div class="mb-3 mt-3">
+                <input name ='option3' type="text" class="form-control" placeholder="Option3" required>
+              </div>
+              <div class="mb-3 mt-3">
+                <input name ='option4' type="text" class="form-control" placeholder="Option4" required>
+              </div>
+            <div class="mb-3 mt-3">
+              <select class="form-select" name='answer'>
+                <option value="">Correct Option</option>
+                <option value="Option1">Option1</option>
+                <option value="Option2">Option2</option>
+                <option value="Option3">Option3</option>
+                <option value="Option4">Option4</option>
+              </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success" >Submit</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

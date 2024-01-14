@@ -1,0 +1,70 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+</style>
+
+<section class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
+        <ol>
+          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+          <li>Exam Scores</li>
+          <li></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <section class="inner-page">
+    <div class="container-fluid">
+        <div class="container">
+            <table class="table">
+                <h2 class="mt-5">Total Exam: {{ result|length }}</h2>
+                {% if result %}
+                
+                <thead>
+                  
+                  <tr>
+                    <th>S/N</th>
+                    <th>Course Name</th>
+                    <th>Total Marks</th>
+                    <th>Correct Mark</th>
+                    <th>Missed Marks</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Time Used</th>
+                    <th>Time Remaining</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                
+                <tbody>
+                  {% for i in result %}
+                  <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.exam}}</td>
+                    <td>{{i.total_marks}}</td>
+                    <td>{{i.marks}}</td>
+                    <td>{{i.missed_marks}}</td>
+                    <td>{{i.start_time}} </td>
+                    <td>{{i.end_time}}</td>
+                    <td>{{i.time_used}}</td>
+                    <td>{{i.time_remaining}} </td>
+                    <td> <a href="{% url 'mark' i.id %}?next={{ request.GET.next }}"><button type="button" class="btn btn-success"><i class="bi bi-eye"></i> View Details</button></a></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+                {% else %}
+                  <center><h2 style="font-weight: bolder;" class="text-danger mt-5"> NO EXAM SCORE FOUND</h2></center>
+                  {% endif %}
+              </table>
+    </div>
+</section>
+{% endblock content %}

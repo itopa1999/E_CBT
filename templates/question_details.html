@@ -1,0 +1,121 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+</style>
+
+<section class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
+        <ol>
+          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+          <li><a href="{% url 'question' %}">Questions</a></li>
+          <li>Questions Details</li>
+          <li></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <section class="inner-page">
+    <div class="container">
+
+      <div class="card col-lg-5 p-2 border-0 shadow">
+        <div class="card-body">
+          <h4 class="card-title">Exam Details :</h4>
+            <p class="card-text" >
+                <ul style="list-style:decimal;" >
+                    <li>Course : {{course.name}}</li>
+                    <li>Total Question : {{total_questions}}</li>
+                    <li>Total Marks : {{total_marks}}</li>
+                    <li>Exam Duration : <span class="text-danger">{{duration}}</span></li>
+                    <a href="#"><button data-bs-toggle="modal" data-bs-target="#deleteExamQuestion" type="button" class="btn btn-danger mt-3"><i class="bi bi-trash-fill"></i>. Delete Exam Question</button></a>
+                </ul>
+              </p>
+        </div>
+      </div>
+      <hr>
+
+        
+        {% for q in question %}
+        <div class="multichoice p-2">
+        <h4  class="text-danger">{{ forloop.counter }}. {{q.question}}</h3>
+        
+            <input type="hidden" name="csrfmiddlewaretoken" value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
+            
+            
+              <div class="form-check mx-4">
+                <input class="form-check-input" disabled type="radio" name="{{ q.id }}" id="{{q.option1}}" value="Option1">
+                <label class="form-check-label" for="option1">
+                  {{q.option1}}
+                </label>
+              </div>
+    
+            
+              <div class="form-check mx-4">
+                <input class="form-check-input" disabled type="radio" name="{{ q.id }}" id="{{q.option2}}" value="Option2">
+                <label class="form-check-label" for="option2">
+                  {{q.option2}}
+                </label>
+              </div>
+    
+            
+              <div class="form-check mx-4">
+                <input class="form-check-input" disabled type="radio" name="{{ q.id }}" id="{{q.option3}}" value="Option3">
+                <label class="form-check-label" for="option3">
+                  {{q.option3}}
+                </label>
+              </div>
+    
+            
+              <div class="form-check mx-4">
+                <input class="form-check-input" disabled type="radio" name="{{ q.id }}" id="{{q.option4}}" value="Option4">
+                <label class="form-check-label" for="option4">
+                  {{q.option4}}
+                </label>
+              </div>
+
+              <div class="form-check mx-4">
+                <input class="form-check-input" disabled type="radio" name="{{ q.id }}" id="{{q.answer}}" value="Option4">
+                <label class="form-check-label text-success" style="font-weight: bolder;" for="option4">
+                  {{q.answer}}
+                </label>
+              </div>
+    
+            
+            </div><hr>
+      {% endfor %}
+  
+
+
+
+      <div class="modal fade" id="deleteExamQuestion" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete Exam Questions</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p style="font-weight: bolder;">
+                !!!! ARE YOU SURE YOU WANT TO DELETE {{course.name|upper}} QUESTIONS
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <a href="{% url 'del-course-question' course.name %}?next={{ request.GET.next }}"><button type="button" class="btn btn" style=" background-color: #E6101B; color: white;">Yes, Sure</button></a>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+
+</div>
+</section>
+{% endblock content %}

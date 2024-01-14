@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E_CBT</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <link href="{% static 'assets/img/favicon.jpeg' %}" rel="icon">
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="{% static 'FAV.png' %}">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,300i,400,400i,600,600i,700,700i|Satisfy|Comic+Neue:300,300i,400,400i,700,700i" rel="stylesheet">
+  <style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .container {
+        text-align: center;
+        background-color: #ffffff;
+        padding: 20px;
+    }
+    .w400{
+        font-size: 170px;
+        font-weight: 600;
+        color: rgb(19, 29, 61);
+    }
+    .opps{
+        font-size: 25px;
+        font-weight: 600;
+        color: rgb(235, 81, 20);
+        margin-top: -13px;
+    }
+    @media screen and (max-width: 768px) {
+            .w400 {
+                font-size: 85px;
+            }
+            .opps {
+                font-size: 15px;
+            }
+        }
+        button {
+  background-color: #160904;
+  border: none;
+  color: rgb(243, 243, 243);
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  font-size: large;
+  border-radius: 16px;
+  margin-top: 14px;
+}
+    </style>
+</head>
+
+<body>
+    <div class="container"><div class="w400">400</div><div class="opps">OOPS! BAD REQUEST</div>
+    {% if user.is_authenticated %}
+        {% if user.groups.all.0.name == 'admin' %}
+    <a href="{% url 'admin_dashboard' %}"><button><i class="bi bi-arrow-90deg-left"></i> Dashboard</button></a>
+    {% endif %}
+    {% if user.groups.all.0.name == 'student' %}
+    <a href="{% url 'student_dashboard' %}"><button><i class="bi bi-arrow-90deg-left"></i> Dashboard</button></a>
+    {% endif %}
+    {% else %}
+    <a href="{% url 'student_dashboard' %}"><button><i class="bi bi-arrow-90deg-left"></i> Login</button></a>
+    {% endif %}
+
+    </div>
+</body>
+</html>

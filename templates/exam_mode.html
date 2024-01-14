@@ -1,0 +1,290 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .pagination {
+    max-width: 900px;
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: justify; 
+  }
+  
+  .pagination li {
+    margin: 0 5px;
+  }
+  .blink {
+    animation: blinker 1s step-start infinite;
+}
+
+@keyframes blinker {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+</style>
+
+<section class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
+        <ol>
+            <li><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'exam-details' course.id %}">Exam Details</a></li>
+            <li>Exam Mode</li>
+            <li></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <section class="inner-page">
+    <div class="container">
+      <h4 class="card-title text-danger"  style="margin:5px;">
+        <article class="clock" id="model3">                 
+          <div class="count" style="font-weight: bolder; font-size: larger;">
+            <div id="timer" style="text-align:right">0.00</div>
+          </div>
+        </article>
+      </h4>
+
+      <form class="form" id="myForm" autocomplete="off" onsubmit="return saveAns()"  action="{% url 'calculate-marks' %}" method="POST">
+        {% csrf_token %}
+        <h2 style="text-align: center;">Course: {{course.name}}</h2>
+        
+        {% for q in questions%}
+        <div class="multichoice p-2">
+        <h4  class="text-danger">{{ forloop.counter }}. {{q.question}}</h3>
+        
+            <input type="hidden" name="csrfmiddlewaretoken" value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
+            
+            
+              <div class="form-check mx-4">
+                <input class="form-check-input " style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.option1}}" value="Option1">
+                <label class="form-check-label" style="font-size: 20px;" for="option1">
+                  {{q.option1}}
+                </label>
+              </div>
+    
+            
+              <div class="form-check mx-4">
+                <input class="form-check-input " style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.option2}}" value="Option2">
+                <label class="form-check-label" style="font-size: 20px;" for="option2">
+                  {{q.option2}}
+                </label>
+              </div>
+    
+            
+              <div class="form-check mx-4">
+                <input class="form-check-input" style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.option3}}" value="Option3">
+                <label class="form-check-label" style="font-size: 20px;" for="option3">
+                  {{q.option3}}
+                </label>
+              </div>
+    
+            
+              <div class="form-check mx-4">
+                <input class="form-check-input " style="font-size: 20px;"  type="radio" name="{{ q.id }}" id="{{q.option4}}" value="Option4">
+                <label class="form-check-label " style="font-size: 20px;" for="option4">
+                  {{q.option4}}
+                </label>
+              </div>
+    
+            
+            </div>
+      {% endfor %}
+      <br><br>
+    <div id="pagination-container">
+      <ul class="pagination"></ul>
+    </div>
+    <br><br><br><br>
+            <button id="submitButton" class="btn btn-success btn-lg" style="border-radius: 0%;"  type="submit"> <i class='bi bi-arrow-up-circle'></i> Submit Exam</button>
+            <button class="btn btn-warning text-white btn-lg" style="border-radius: 0%;float:right;"  type="reset"> <i class='bi bi-arrow-repeat'></i></button>
+        </form>
+        
+    </div>
+    
+    <script> 
+      function saveAns(){  
+  
+          var ele = document.getElementsByTagName('input'); 
+          for(i = 0; i < ele.length; i++) { 
+              if(ele[i].type === "radio") { 
+                  if(ele[i].checked){        
+                    setCookie(ele[i].name,ele[i].value,3)
+                  }
+              } 
+          } 
+            
+      }
+      
+      function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+  
+  </script>
+
+   
+  
+    
+    <script src="{% static '/jquery/jquery.min.js' %}"></script>
+    <script>
+    var itemsPerPage = 1;
+    var currentPage = 1;
+    var totalItems = $(".multichoice").length;
+    var totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+    // Add previous and next buttons to the pagination container
+    $("#pagination-container .pagination").append("<li class='page-item'><a class='page-link mt-3' href='#!' id='prev'>Previous</a></li>");
+    for (var i = 1; i <= totalPages; i++) {
+        $("#pagination-container .pagination").append("<li class='page-item'><a class='page-link mt-3' href='#!' id='" + i + "'>" + i + "</a></li>");
+    }
+    $("#pagination-container .pagination").append("<li class='page-item'><a class='page-link mt-3' href='#!' id='next'>Next</a></li>");
+    
+    // Hide all multichoice items except for the first page
+    $(".multichoice").slice(itemsPerPage).hide();
+    $("#prev").addClass("disabled");
+    // Handle page clicks
+    $("#pagination-container .pagination li a").click(function() {
+        var id = $(this).attr("id");
+        if (id == "prev") {
+            currentPage--;
+        } else if (id == "next") {
+            currentPage++;
+        } else {
+            currentPage = parseInt(id);
+        }
+        $(".multichoice").hide();
+        var startIndex = (currentPage - 1) * itemsPerPage;
+        var endIndex = startIndex + itemsPerPage;
+        $(".multichoice").slice(startIndex, endIndex).show();
+        
+        // Update active page link
+        $("#pagination-container .pagination li").removeClass("active");
+        $("#pagination-container .pagination li #" + currentPage).parent().addClass("active");
+       
+     
+        // Disable previous and next buttons on first and last pages
+        if (currentPage == 1) {
+            $("#prev").addClass("disabled");
+        } else {
+            $("#prev").removeClass("disabled");
+        }
+        if (currentPage == totalPages) {
+            $("#next").addClass("disabled");
+        } else {
+            $("#next").removeClass("disabled");
+        }
+    });
+  </script>
+
+  <script>
+   
+// Function to start the countdown timer
+function startCountdown(targetDate) {
+  const timerElement = document.getElementById("timer");
+  const submitButton = document.getElementById("submitButton");
+
+  function updateTimer() {
+    const currentDate = new Date().getTime();
+    const timeLeft = targetDate - currentDate;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timerElement.textContent = "Countdown Successfully!";
+      submitButton.click();
+    } else {
+      const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      if (hours === 0 && minutes === 0 && seconds === 1) {
+        timerElement.classList.remove("blink");
+      } else if (hours === 0 && minutes <= 1) {
+        timerElement.classList.add("blink");
+      } else {
+        timerElement.classList.remove("blink");
+      }
+
+      const formattedHours = hours.toString().padStart(2, "0");
+      const formattedMinutes = minutes.toString().padStart(2, "0");
+      const formattedSeconds = seconds.toString().padStart(2, "0");
+
+      timerElement.innerHTML = `<i class='bi bi-alarm'></i> ${formattedHours} hours : ${formattedMinutes} minutes : ${formattedSeconds} seconds left`;
+    }
+  }
+
+  updateTimer(); // Initial update
+
+  // Update the timer every second
+  const timerInterval = setInterval(updateTimer, 1000);
+
+  // Store the target date in local storage
+  localStorage.setItem("targetDate", targetDate.toString());
+}
+
+// Check if a target date is stored in local storage
+const storedTargetDate = localStorage.getItem("targetDate");
+
+if (storedTargetDate) {
+  startCountdown(parseInt(storedTargetDate, 10));
+} else {
+  const targetDate = new Date().getTime() + {{course.duration}} * 60 * 1000;
+  startCountdown(targetDate);
+}
+
+  </script>
+  
+
+
+
+
+  
+<script>
+  // Function to save the selected radio button to localStorage
+  function saveSelectedRadio() {
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    radioButtons.forEach((radioButton) => {
+      if (radioButton.checked) {
+        localStorage.setItem(radioButton.name, radioButton.id);
+      }
+    });
+  }
+
+// Function to restore the selected radio button from localStorage
+function restoreSelectedRadio() {
+  const radioButtons = document.querySelectorAll('input[type="radio"]');
+  radioButtons.forEach((radioButton) => {
+    const savedRadioButtonId = localStorage.getItem(radioButton.name); // Use getItem
+    if (savedRadioButtonId === radioButton.id) {
+      radioButton.checked = true;
+    }
+  });
+}
+
+
+  // Add event listeners to handle saving and restoring the selected radio button
+  window.addEventListener('load', restoreSelectedRadio);
+  const radioButtons = document.querySelectorAll('input[type="radio"]');
+  radioButtons.forEach((radioButton) => {
+    radioButton.addEventListener('change', saveSelectedRadio);
+  });
+</script>
+
+    </div>
+  </section>
+        {% endblock content %}

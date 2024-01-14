@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+</style>
+
+<section class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
+        <ol>
+          <li><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
+          <li>Exam Details</li>
+          <li></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <section class="inner-page">
+    <div class="container-fluid">
+      <div class='d-flex '>
+        <div class="card m-2 col-lg-5 p-2 border-0 shadow">
+            <div class="card-body">
+              <h4 class="card-title">Student Details :</h4>
+                <p class="card-text" >
+                    <ul style="list-style:decimal;" >
+                        <li>Student Name : {{request.user.first_name}} {{request.user.first_name}}</li>
+                        <li>Student Matric : {{request.user.userid}}</li>
+                        <li>Student Department : {{request.user.department}}</li>
+                    </ul>
+                  </p>
+            </div>
+          </div>
+          <div class="card m-2 col-lg-5 p-2 border-0 shadow">
+            <div class="card-body">
+              <h4 class="card-title">Exam Details :</h4>
+                <p class="card-text" >
+                    <ul style="list-style:decimal;" >
+                        <li>Course : {{course.name}}</li>
+                        <li>Total Question : {{total_questions}}</li>
+                        <li>Total Marks : {{total_marks}}</li>
+                        <li>Exam Duration : <span class="text-danger">{{duration}}</span></li>
+                    </ul>
+                  </p>
+            </div>
+          </div>
+        </div>
+          <hr>
+          <h4 class="card-title m-5">Rules :</h4>
+                    <p class="card-text">
+                        </p><ul style="list-style:decimal;">
+                          <li>Please Verify your information before proceeding.</li>
+                            <li><span class="text-danger h3">DO NOT REFRESH THE PAGE WHILE WRITING EXAM.</span></li>
+                            <li>All questions are MCQ (multiple choice question)</li>
+                            <li><span class="text-danger">Only one choice is correct among the given.</span></li>
+                            <li>Every question carry different marks.</li>
+                            <li>Try to answer ASAP.</li>
+                            <li>If you PRESS refresh or go back to the previous page, there will be a new question for you and the question you were on will be counted as number of attempts.</li>
+                            <li>Questions are presented randomly.</li>
+                            <li>you are to answer all question before the time expiry</li>
+                            <li>Exam auto submit when time expirys</li>
+                            <li>Work with the time</li>
+                            <li>Your time starts when you click on the "Enter exam button"</li>
+                            <li><span class="text-danger">Talk to supervisor if there is any question</span></li>
+                            <li>You will be able to view marks immediately once after you submit the answer.</li>
+                        </ul>
+                    <p>
+                    <a href="{% url 'exam-mode' course.id  %}" class="btn btn-success" style="border-radius:0px;"><i class='bi bi-pencil'></i> Enter Examination</a>
+                
+                <div class="card-footer">Best Of Luck, {{user.first_name}}!</div>  
+         
+
+    </div>
+  </section>
+        {% endblock content %}

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>E_CBT</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.jpeg' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,300i,400,400i,600,600i,700,700i|Satisfy|Comic+Neue:300,300i,400,400i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Delicious
+  * Updated: May 30 2023 with Bootstrap v5.3.0
+  * Template URL: https://bootstrapmade.com/delicious-free-restaurant-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Top Bar ======= -->
+  <section id="topbar" class="d-flex align-items-center fixed-top ">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-center justify-content-lg-start">
+      <i class="bi bi-clock d-flex align-items-center"><span id="date">loading...</span></i>
+      <i class="bi bi-clock ms-4 d-none d-lg-flex align-items-center"><span id="time">loading...</span></i>
+    </div>
+  </section>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center ">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+      <div class="logo me-auto">
+        <h1><a href="index.html">E_CBT</a></h1>
+       
+        <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>
+      </div>
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          {% if user.is_authenticated %}
+            {% if user.groups.all.0.name == 'admin' %}
+          <li><a class="nav-link scrollto " href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+          <li class="dropdown"><a href="#student"><span>Student</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="{% url 'all-student' %}">List Students</a></li>
+              <li><a href="{% url 'import-students' %}">Import Students</a></li>
+              <li><a href="#" data-bs-toggle="modal" data-bs-target="#deleteStudent">Delete a Student</a></li>
+              <li><a href="#" data-bs-toggle="modal" data-bs-target="#deleteAllStudent">Delete all Students</a></li>
+            </ul>
+          </li>
+          <li class="dropdown"><a href="#"><span>Result</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="{% url 'all_results' %}">View all Student Results</a></li>
+              <li><a href="#" data-bs-toggle="modal" data-bs-target="#resetAllResult">Reset All Students Result</a></li>
+            </ul>
+          </li>
+          <li class="dropdown"><a href="#"><span>Question</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="{% url 'import-question' %}">Import Questions</a></li>
+              <li><a href="#" data-bs-toggle="modal" data-bs-target="#deleteAllQuestion">Delete all Question</a></li>
+              <li><a href="{% url 'question' %}">View all Questions</a></li>
+            </ul>
+          </li>
+          <li class="dropdown"><a href="#"><span>Department</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="#" data-bs-toggle="modal" data-bs-target="#addDepartment" >Add a Department</a></li>
+              <li><a href="{% url 'department' %}">View all Departments</a></li>
+            </ul>
+          </li>
+
+          <li class="dropdown"><a href="#"><span>Course</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="{% url 'import-courses' %}">Import Courses</a></li>
+              <li><a href="{% url 'course' %}">View all Course</a></li>
+              <li><a href="#" data-bs-toggle="modal" data-bs-target="#deleteAllCourse">Delete all Course</a></li>
+            </ul>
+          </li>
+          {% endif %}
+          {% if user.groups.all.0.name == 'student' %}
+            <li><a class="nav-link scrollto " href="{% url 'student_dashboard' %}">Dashboard</a></li>
+            <li><a class="nav-link scrollto " href="{% url 'student-course-mark' %}">Exam Scores</a></li>
+          {% endif %}
+          {% endif %}
+          <li><a class="nav-link scrollto " href="{% url 'changepassword' %}">Change Password</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+      <a href="{% url 'logout_user' %}" class="book-a-table-btn scrollto"><i class="bi bi-box-arrow-in-left"></i> Logout</a>
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+
+{% block content %}
+    
+{% endblock content %}
+    
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="container">
+      
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">StarLiteCode</a>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+
+  <div class="modal fade" id="deleteStudent" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Student</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'delete-student' %}?next={{ request.GET.next }}">
+            {% csrf_token %}
+            <div class="mb-3 mt-3">
+              <input name ='matric' type="text" class="form-control" placeholder="Enter Matric No of the Student" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn" style=" background-color: #E6101B; color: white;">Delete</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteAllStudent" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete All Student</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="font-weight: bolder;">
+            !!!! ARE YOU SURE YOU WANT TO DELETE ALL STUDENTS
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="{% url 'del-all-student' %}?next={{ request.GET.next }}"><button type="button" class="btn btn" style=" background-color: #E6101B; color: white;">Yes, Sure</button></a>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="deleteAllQuestion" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete All Questions</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="font-weight: bolder;">
+            !!!! ARE YOU SURE YOU WANT TO DELETE ALL QUESTIONS
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="{% url 'del-all-question' %}?next={{ request.GET.next }}"><button type="button" class="btn btn" style=" background-color: #E6101B; color: white;">Yes, Sure</button></a>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteAllCourse" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete All Course</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="font-weight: bolder;">
+            !!!! ARE YOU SURE YOU WANT TO DELETE ALL COURSES
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="{% url 'del-all-courses' %}?next={{ request.GET.next }}"><button type="button" class="btn btn" style=" background-color: #E6101B; color: white;">Yes, Sure</button></a>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="resetAllResult" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Reset All Results</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="font-weight: bolder;">
+            !!!! ARE YOU SURE YOU WANT TO RESET ALL RESULTS?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="{% url 'del-all-results' %}?next={{ request.GET.next }}"><button type="button" class="btn btn" style=" background-color: #E6101B; color: white;">Yes, Sure</button></a>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="addDepartment" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Department</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'add-department' %}?next={{ request.GET.next }}">
+            {% csrf_token %}
+            <div class="mb-3 mt-3">
+              <input name ='department' type="text" class="form-control" placeholder="Department Name" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success" >Add Department</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="addCourse" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Course</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'add-course' %}?next={{ request.GET.next }}">
+            {% csrf_token %}
+            <div class="mb-3 mt-3">
+              <input name ='name' type="text" class="form-control" placeholder="Enter Course Name" required>
+            </div>
+            <div class="mb-3 mt-3">
+              <input name ='mark' type="number" class="form-control" placeholder="Enter Course Total Marks" required>
+            </div>
+            <div class="mb-3 mt-3">
+              <input name ='duration' type="number" class="form-control" placeholder="Enter Course Duration in Minutes" required>
+            </div>
+            <div class="mb-3 mt-3">
+              <select class="form-select" name='department'>
+                <option value="">Choose Department</option>
+                {% for i in department %}
+                <option value="{{i.name}}">{{i.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success" >Submit</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    
+    const d = new Date();
+    let day = days[d.getDay()];
+    document.getElementById("date").innerHTML = day;
+  </script>
+<script>
+    const f = new Date();
+    document.getElementById("time").innerHTML = f;
+    </script>
+
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static '/jquery/jquery.min.js' %}"></script>
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+  {% include "msg.html" %}
+</body>
+
+</html>

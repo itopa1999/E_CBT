@@ -1,0 +1,150 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+</style>
+
+<section class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
+        <ol>
+          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+          <li>All Results</li>
+          <li></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <section class="inner-page">
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <div class="container">
+                <a href="#"><button data-bs-toggle="modal" data-bs-target="#resetAllResult" type="button" class="btn btn-danger"><i class="bi bi-arrow-repeat"></i>. Reset all Results</button></a>
+                <button data-bs-toggle="modal" data-bs-target="#filterResult" type="button" class="btn btn-primary"><i class="bi bi-filter"></i>. Filters</button>
+            </div>
+            <table class="table">
+                <h2 class="mt-5">Total Exam: {{ result|length }}</h2>
+                {% if result %}
+                
+                <thead>
+                  
+                  <tr>
+                    <th>S/N</th>
+                    <th>Student Name</th>
+                    <th>Student Matric</th>
+                    <th>Student Department</th>
+                    <th>Total Marks</th>
+                    <th>Course Name</th>
+                    <th>Correct Mark</th>
+                    <th>Missed Marks</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Time Used</th>
+                    <th>Time Remaining</th>
+                    <th>Action</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                
+                <tbody>
+                  {% for i in result %}
+                  <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.student.first_name}} {{i.student.last_name}}</td>
+                    <td>{{i.student.userid}}</td>
+                    <td>{{i.student.department}}</td>
+                    <td>{{i.total_marks}}</td>
+                    <td>{{i.exam}}</td>
+                    <td>{{i.marks}}</td>
+                    <td>{{i.missed_marks}}</td>
+                    <td>{{i.start_time}} </td>
+                    <td>{{i.end_time}}</td>
+                    <td>{{i.time_used}}</td>
+                    <td>{{i.time_remaining}} </td>
+                    <td> <a href="{% url 'admin-view-mark' i.id %}?next={{ request.GET.next }}"><button type="button" class="btn btn-success"><i class="bi bi-eye"></i> Details</button></a></td>
+                    <td> <a href="{% url 'del-result' i.id %}?next={{ request.GET.next }}"><button type="button" class="btn btn-info text-white"><i class="bi bi-arrow-repeat"></i> Reset Score</button></a></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+                {% else %}
+                  <center><h2 style="font-weight: bolder;" class="text-danger mt-5"> NO RESULT FOUND</h2></center>
+                  {% endif %}
+              </table>
+    </div>
+</section>
+
+
+<div class="modal fade" id="filterResult" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Filter Result</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="get" action="#" id="myForm">
+            <div class="mb-3 mt-3">
+              <input name ='student__first_name' type="text" class="form-control" placeholder=" First Name of the Student" >
+            </div>
+  
+            <div class="mb-3 mt-3">
+              <input name ='student__last_name' type="text" class="form-control" placeholder="Last Name of the Student" >
+            </div>
+  
+            <div class="mb-3 mt-3">
+              <input name ='student__userid' type="text" class="form-control" placeholder="Matric No of the Student" >
+            </div>
+
+            <div class="mb-3 mt-3">
+                <input name ='student__department' type="text" class="form-control" placeholder="Department of the Student" >
+              </div>
+
+              <div class="mb-3 mt-3">
+                <input name ='marks__lte' type="text" class="form-control" placeholder="Score less than ......" >
+              </div>
+
+              <div class="mb-3 mt-3">
+                <input name ='marks__gte' type="text" class="form-control" placeholder="Score greater than ......" >
+              </div>
+  
+            <div class="mb-3 mt-3">
+              <select class="form-select" name='student__department'>
+                <option value="">Choose Department</option>
+                {% for i in department %}
+                <option value="{{i.id}}">{{i.name}}</option>
+                {% endfor %}
+              </select>
+
+              <select class="form-select mt-3" name='exam'>
+                <option value="">Choose Course</option>
+                {% for i in course %}
+                <option value="{{i.id}}">{{i.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-info" onclick="submitForm('{% url 'filter-results-download' %}')" >Filter & Download</button>
+          <button type="button" class="btn btn-success" onclick="submitForm('{% url 'all_results' %}')">Filter</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    function submitForm(url){
+        document.getElementById('myForm').action =url;
+        document.getElementById('myForm').submit();
+    }
+  </script>
+{% endblock content %}

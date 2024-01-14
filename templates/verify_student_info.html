@@ -1,0 +1,63 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+</style>
+
+<section class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
+        <ol>
+          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+          <li><a href="{% url 'import-students' %}">Import Student</a></li>
+          <li>Verify Students information</li>
+          <li></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <section class="inner-page">
+    <div class="container-fluid">
+
+<form autocomplete="off" method="post" action="{% url 'verify-student-data' %}">
+    {% csrf_token %}
+    <table class='table'>
+      <p class='text-info'>{{count}} student information is found in {{new_data}}, view below to verify</p>
+      <thead>  <!-- Add thead element for the table header -->
+        <tr>
+          
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Matric No</th>
+                <th>Department</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+        <tr>
+            <td>{{ row.first_name }}</td>
+      <td>{{ row.last_name }}</td>
+      <td>{{ row.userid }}</td>
+      <td>{{ row.department }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <input type="submit" class='btn btn-success' name="confirm" value="Confirm">
+    <a type="button" class='btn btn-danger' href="{% url 'import-students' %}">Cancel</a>
+</form>
+
+
+
+</div>
+</section>
+{% endblock content %}

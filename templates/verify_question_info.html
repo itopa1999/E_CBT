@@ -1,0 +1,70 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+</style>
+
+<section class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
+        <ol>
+          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+          <li><a href="{% url 'import-question' %}">Import Question</a></li>
+          <li>Verify Question information</li>
+          <li></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <section class="inner-page">
+    <div class="container-fluid">
+
+<form autocomplete="off" method="post" action="{% url 'verify-question-data' %}">
+    {% csrf_token %}
+    <table class='table'>
+      <p class='text-info'>{{count}} Questions information is found in {{new_data}}, view below to verify</p>
+      <thead>  <!-- Add thead element for the table header -->
+        <tr>
+          <th>S/N</th>
+            <th>Question</th>
+            <th>Option1</th>
+            <th>Option2</th>
+            <th>Option3</th>
+            <th>Option4</th>
+            <th>Marks</th>
+            <th>Course</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+            <td>{{ row.question }}</td>
+      <td>{{ row.option1 }}</td>
+      <td>{{ row.option2 }}</td>
+      <td>{{ row.option3 }}</td>
+      <td>{{ row.option4 }}</td>
+      <td>{{ row.marks }}</td>
+      <td>{{ row.course }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <input type="submit" class='btn btn-success' name="confirm" value="Confirm">
+    <a type="button" class='btn btn-danger' href="{% url 'import-students' %}">Cancel</a>
+</form>
+
+
+
+</div>
+</section>
+{% endblock content %}

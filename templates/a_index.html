@@ -1,0 +1,131 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+</style>
+
+<section class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
+        <ol>
+          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+          <li></li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <section class="inner-page">
+    <div class="container-fluid">
+        <section id="why-us" class="why-us">
+            <div class="container">
+        
+              <div class="row">
+        
+                <div class="col-lg-4">
+                  <div class="box">
+                    <span><i class="bi bi-people-fill" style="font-size:50px;"></i></span>
+                    <h4>Total Student</h4>
+                    <p style="font-size:50px; font-weight: bolder;">{{total_student}}</p>
+                  </div>
+                </div>
+        
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                  <div class="box">
+                    <span><i class="bi bi-book-fill" style="font-size:50px;"></i></span>
+                    <h4> Total Course</h4>
+                    <p style="font-size:50px; font-weight: bolder;">{{total_course}}</p>
+                  </div>
+                </div>
+        
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                  <div class="box">
+                    <span><i class="bi bi-people-fill" style="font-size:50px;"></i></span>
+                    <h4>Total Department</h4>
+                    <p style="font-size:50px; font-weight: bolder;">{{total_department}}</p>
+                  </div>
+                </div>
+              </div>
+              <br><br>
+              <div class="row">
+        
+                <div class="col-lg-4">
+                  <div class="box">
+                    <span><i class="bi bi-person-fill" style="font-size:50px;"></i></span>
+                    <h4>Total Logged In Students</h4>
+                    <p style="font-size:50px; font-weight: bolder;" id="login-data">loading...</p>
+                  </div>
+                </div>
+
+                <div class="col-lg-4">
+                  <div class="box">
+                    <span><i class="bi bi-people-fill" style="font-size:50px;"></i></span>
+                    <h4>Total Students in Exam Mode</h4>
+                    <p style="font-size:50px; font-weight: bolder;" id="mode-data">loading..</p>
+                  </div>
+                </div>
+        
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                  <div class="box">
+                    <span><i class="bi bi-person-fill" style="font-size:50px;"></i></span>
+                    <h4>Total Students Submitted</h4>
+                    <p style="font-size:50px; font-weight: bolder;" id="submit-data">loading..</p>
+                  </div>
+                </div>
+              </div>
+                
+
+              <br><br>
+              <div class="row">
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                  <div class="box">
+                    <span><i class="bi bi-book-fill" style="font-size:50px;"></i></span>
+                    <h4> Total Students Till Writing</h4>
+                    <p style="font-size:50px; font-weight: bolder;" id="remain-data">loading..</p>
+                  </div>
+                </div>
+              </div>
+              </div>
+        
+            
+          </section>
+
+
+
+    </div>
+  </section>
+
+
+  <script>
+    function loadData() {
+            fetch('count_mode/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('mode-data').innerHTML = `${data.mode}`;
+                document.getElementById('submit-data').innerHTML = `${data.submit}`;
+                document.getElementById('remain-data').innerHTML = `${data.remain}`;
+                document.getElementById('login-data').innerHTML = `${data.login}`;
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('Error fetching admin dashboard data:', error);
+            });
+    }
+
+    // Load data every 2 seconds
+    setInterval(loadData, 2000);
+
+    // Initial load when the page is first loaded
+    loadData();
+</script>
+{% endblock content %}
+
+
+
