@@ -5,41 +5,36 @@
 <style>
 </style>
 
-<section class="breadcrumbs">
-    <div class="container">
-
-      <div class="d-flex justify-content-between align-items-center">
-        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
-        <ol>
-          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
-          <li>Courses</li>
-          <li></li>
-        </ol>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <section class="inner-page">
+<div class="pagetitle">
+  <h1>Courses</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item">Courses</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+<section class="section">
     <div class="container-fluid">
       <div class="container">
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCourse"><i class="bi bi-book-fill"></i>. Add Course</button>
-        <a href="{% url 'import-courses' %}"><button type="button" class="btn btn-primary"><i class="bi bi-book-half"></i>. Import Courses</button></a>
-        <a href="#"><button data-bs-toggle="modal" data-bs-target="#deleteAllCourse" type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i>. Delete all Courses</button></a>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCourse"><i class="bi bi-journal-text"></i>. Add Course</button>
+        <a href="{% url 'import-courses' %}"><button type="button" class="btn btn-primary"><i class="bi bi-upload"></i>. Import Courses</button></a>
+        <button data-bs-toggle="modal" data-bs-target="#filterCourse" type="button" class="btn btn-info text-white"><i class="bi bi-filter"></i>. Filters</button>
       </div>
       <table class="table">
-        <h2 class="mt-5">Total Students: {{ course|length }}</h2>
+        <h2 class="mt-5">Total Courses: {{ course|length }}</h2>
         {% if course %}
         
         <thead>
           
           <tr>
+            <th>S/N</th>
             <th>Course Name</th>
             <th>Department</th>
             <th>Total Marks</th>
             <th>Duration</th>
+            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -47,19 +42,70 @@
         <tbody>
           {% for i in course %}
           <tr>
+            <td>{{forloop.counter}}</td>
             <td>{{i.name}}</td>
-            <td>{{i.department}}</td>
+            <td>{% for department in i.department.all %}
+              <li>{{ department.name }}
+              </li>
+            {% endfor %}</td>
             <td>{{i.total_marks}}</td>
             <td>{{i.duration}} minutes</td>
-            <td> <a href="{% url 'delete-student1' i.id %}?next={{ request.GET.next }}"><button type="button" class="btn btn" style=" background-color: #E6101B; color: white;">Delete</button></a></td>
+            <td>
+              {% if i.control == True %}
+              Activated
+              {% else %}
+              Deactivated
+              {% endif %}
+            </td>
+            <td> <a href="{% url 'edit-course' i.id %}?next={{ request.GET.next }}"><button type="button" class="btn btn-success">Edit</button></a></td>
           </tr>
           {% endfor %}
         </tbody>
         {% else %}
-          <center><h2 style="font-weight: bolder;" class="text-danger mt-5"> NO STUDENT FOUND</h2></center>
+          <center><h2 style="font-weight: bolder;" class="text-danger mt-5"> NO COURSE FOUND</h2></center>
           {% endif %}
       </table>
 
     </div>
 </section>
+
+<div class="modal fade" id="filterCourse" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Filter Course</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="get">
+          <div class="mb-3 mt-3">
+            <input name ='name' type="text" class="" placeholder=" Course Name" >
+          </div>
+          <div class="mb-3 mt-3">
+            <select class="select" name='department'>
+              <option value="">Choose Department</option>
+              {% for i in department %}
+              <option value="{{i.id}}">{{i.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3 mt-3">
+            <select class="select" name='course__level'>
+              <option value="">Choose Course Level</option>
+              {% for i in level %}
+              <option value="{{i.id}}">{{i.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success" >Filter</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}

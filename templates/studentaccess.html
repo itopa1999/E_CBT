@@ -1,0 +1,117 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+</style>
+
+<div class="pagetitle">
+    <h1>Students Access Control</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item">Students Access Control</li>
+        <li class="breadcrumb-item"></li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="container-fluid">
+      <div class="container">
+        <button data-bs-toggle="modal" data-bs-target="#filterStudent" type="button" class="btn btn-info text-white"><i class="bi bi-filter"></i>. Filters</button>
+        
+      </div>
+      <table class="table">
+        <h2 class="mt-5">Total Students: {{ student|length }}</h2>
+        {% if student %}
+        
+        <thead>
+          
+          <tr>
+            <th>S/N</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Matric No</th>
+            <th>Department</th>
+            <th>Student Permission</th>
+            
+          </tr>
+        </thead>
+        
+        <tbody>
+          {% for i in student %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.first_name}}</td>
+            <td>{{i.last_name}}</td>
+            <td>{{i.userid}}</td>
+            <td>{{i.department}}</td>
+            <td>
+              {% if i.exam == False %}
+              <a href="{% url 'activate_student' i.id %}?next={{ request.GET.next }}"><i class="bi bi-toggle-off" style="color:#2f589e; font-size: 40px; "></i></a></td>
+              {% else %}
+              <a href="{% url 'deactivate_student' i.id %}?next={{ request.GET.next }}"><i class="bi bi-toggle-on" style="color:#2f589e; font-size: 40px; "></i></a></td>
+              {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+        {% else %}
+          <center><h2 style="font-weight: bolder;" class="text-danger mt-5"> NO STUDENT FOUND</h2></center>
+          {% endif %}
+      </table>
+
+    </div>
+</section>
+
+
+<div class="modal fade" id="filterStudent" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Filter Student</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="get" action="#" id="myForm2">
+          <div class="mb-3 mt-3">
+            <input name ='first_name' type="text" class="" placeholder=" First Name of the Student" >
+          </div>
+
+          <div class="mb-3 mt-3">
+            <input name ='last_name' type="text" class="" placeholder="Last Name of the Student" >
+          </div>
+
+          <div class="mb-3 mt-3">
+            <input name ='userid' type="text" class="" placeholder="Matric No of the Student" >
+          </div>
+
+          <div class="mb-3 mt-3">
+            <select class="select" name='department'>
+              <option value="">Choose Department</option>
+              {% for i in department %}
+              <option value="{{i.id}}">{{i.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-white shadow border-success" onclick="submitForm('{% url 'filter-student-permission-on' %}')" >Filter & Student Permission ON</button>|
+        <button type="button" class="btn btn-white shadow border-danger" onclick="submitForm('{% url 'filter-student-permission-off' %}')" >Filter & Student Permission OFF</button>|
+        <button type="button" class="btn btn-success" onclick="submitForm('{% url 'studentaccess' %}')">Filter</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function submitForm(url){
+      document.getElementById('myForm2').action =url;
+      document.getElementById('myForm2').submit();
+  }
+</script>
+
+
+{% endblock content %}

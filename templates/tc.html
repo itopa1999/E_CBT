@@ -1,0 +1,114 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+</style>
+
+<div class="pagetitle">
+    <h1>ReadMe and T/C</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item">ReadMe and T/C</li>
+        <li class="breadcrumb-item"></li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="container-fluid">
+      <br><br>
+      <center><h2><b>
+        THANK YOU FOR USING OUR SERVICE, @StarLiteCode WE APPRECIATE. <br> KEEP ENJOYING OUR PRODUCTS
+      </b></h2></center>
+      <div class="accordion mt-3" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+             <b>TERMS AND CONDITIONS</b> 
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <li>
+                  COMING SOON
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed text-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              <b>FUNCTIONS TO KNOW</b> 
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse " aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <li>
+                  <dt>Exam Permission </dt>
+                  <dl>it is use for controlling whether student(s) starts the exam course(s) or not, If Exam Permission is ON. it means that student(s) can start the exam course(s),
+                    If Exam Permission is OFF it means that student(s) can not start the exam course(s). The Default Exam Permission for all courses is OFF
+                  </dl>
+                </li>
+                <li>
+                  <dt>
+                    Exam Submit Control
+                  </dt>
+                  <dl>
+                      it is use for auto submitting the student that are currently writing course(s) exam. if he Exam Submit Control is ON, it means that all student(s) can still write the ongoing course(s) exam,
+                      if the Exam Submit Control is OFF, that means that all the student(s) currently writing the ongoing course(s) exam will be automatically submitted and Auto grade. Default for all course(s) is ON.
+                  </dl>
+                </li>
+                <li>
+                  <dt>
+                    Student Permission
+                  </dt>
+                  <dl>
+                    it is use for activate and deactivate student(s) to or from writing exam. if Student Permission is ON, it means that student(s) can write exam,
+                    if the Student Permission is OFF, it means that student(s) cannot write or enter into the exam mode. Default for all student(s) is ON.
+                  </dl>
+                </li>
+                <li>
+                  <dt>
+                    Result Permission
+                  </dt>
+                  <dl>
+                    it is use to control whether result(s) should be display to student or not. if Result Permission is ON, it means that all students can view their scores,
+                    if Result Permission is OFF, it means that all students cannot view their scores. Default for this Result Permission is OFF.
+                  </dl>
+                </li>
+                <li>
+                  <dt>
+                    Stop Time
+                  </dt>
+                  <dl>
+                    COMMING SOON
+                  </dl>
+                  <li>
+                    <dt>
+                      ADMINISTRATOR FUNCTIONS AND ACCESS
+                    </dt>
+                    <dl>
+                      <ul>
+                        <li>
+                          ALL COMING SOON
+                        </li>
+                      </ul>
+                    </dl>
+                  </li>
+                  
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- End Default Accordion Example -->
+
+    </div>
+  </section>
+  {% endblock content %}

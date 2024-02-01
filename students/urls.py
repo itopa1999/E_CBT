@@ -3,7 +3,6 @@ from .import views
 
 
 urlpatterns = [
-    path('login', views.login_user, name='login_student'),
     path('student_dashboard', views.student_dashboard, name='student_dashboard'),
     path('demo', views.pre_video, name='demo'),
     path('exam-mode/<int:pk>', views.exam_mode, name='exam-mode'),

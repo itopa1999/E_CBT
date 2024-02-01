@@ -1,6 +1,7 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-{% load static %}
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -11,150 +12,287 @@
 
   <!-- Favicons -->
   <link href="{% static 'assets/img/favicon.jpeg' %}" rel="icon">
-  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Poppins:300,300i,400,400i,600,600i,700,700i|Satisfy|Comic+Neue:300,300i,400,400i,700,700i" rel="stylesheet">
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/animate.css/animate.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/quill/quill.snow.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/quill/quill.bubble.css' %}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Delicious
-  * Updated: May 30 2023 with Bootstrap v5.3.0
-  * Template URL: https://bootstrapmade.com/delicious-free-restaurant-bootstrap-theme/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+
 </head>
 
 <body>
 
-  <!-- ======= Top Bar ======= -->
-  <section id="topbar" class="d-flex align-items-center fixed-top ">
-    <div class="container-fluid container-xl d-flex align-items-center justify-content-center justify-content-lg-start">
-      <i class="bi bi-clock d-flex align-items-center"><span id="date">loading...</span></i>
-      <i class="bi bi-clock ms-4 d-none d-lg-flex align-items-center"><span id="time">loading...</span></i>
-    </div>
-  </section>
-
   <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center ">
-    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+  <header id="header" class="header fixed-top d-flex align-items-center">
 
-      <div class="logo me-auto">
-        <h1><a href="index.html">E_CBT</a></h1>
-       
-        <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>
+    <div class="d-flex align-items-center justify-content-between">
+      {% if user.groups.all.0.name == 'admin' %}
+      <a href="{% url 'admin_dashboard' %}" class="logo d-flex align-items-center">
+        <img src="{% static "assets/img/login.jpeg" %}" alt="" title="Logo">
+        <span class="d-none d-lg-block" >E_CBT</span>
+      </a>
+      {% endif %}
+      {% if user.groups.all.0.name == 'student' %}
+      <a href="{% url 'student_dashboard' %}" class="logo d-flex align-items-center">
+        <img src="{% static "assets/img/login.jpeg" %}" alt="" title="Logo">
+        <span class="d-none d-lg-block">E_CBT</span>
+      </a>
+        {% endif %}
+      <i class="bi bi-list toggle-sidebar-btn" title="collapse Menu Bar"></i>
+    </div><!-- End Logo -->
+
+    <div class="search-bar">
+      <div class="d-flex align-items-center">
+        <h4><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h4>
       </div>
-
-      <nav id="navbar" class="navbar order-last order-lg-0">
-        <ul>
-          {% if user.is_authenticated %}
-            {% if user.groups.all.0.name == 'admin' %}
-          <li><a class="nav-link scrollto " href="{% url 'admin_dashboard' %}">Dashboard</a></li>
-          <li class="dropdown"><a href="#student"><span>Student</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="{% url 'all-student' %}">List Students</a></li>
-              <li><a href="{% url 'import-students' %}">Import Students</a></li>
-              <li><a href="#" data-bs-toggle="modal" data-bs-target="#deleteStudent">Delete a Student</a></li>
-              <li><a href="#" data-bs-toggle="modal" data-bs-target="#deleteAllStudent">Delete all Students</a></li>
-            </ul>
-          </li>
-          <li class="dropdown"><a href="#"><span>Result</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="{% url 'all_results' %}">View all Student Results</a></li>
-              <li><a href="#" data-bs-toggle="modal" data-bs-target="#resetAllResult">Reset All Students Result</a></li>
-            </ul>
-          </li>
-          <li class="dropdown"><a href="#"><span>Question</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="{% url 'import-question' %}">Import Questions</a></li>
-              <li><a href="#" data-bs-toggle="modal" data-bs-target="#deleteAllQuestion">Delete all Question</a></li>
-              <li><a href="{% url 'question' %}">View all Questions</a></li>
-            </ul>
-          </li>
-          <li class="dropdown"><a href="#"><span>Department</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="#" data-bs-toggle="modal" data-bs-target="#addDepartment" >Add a Department</a></li>
-              <li><a href="{% url 'department' %}">View all Departments</a></li>
-            </ul>
-          </li>
-
-          <li class="dropdown"><a href="#"><span>Course</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="{% url 'import-courses' %}">Import Courses</a></li>
-              <li><a href="{% url 'course' %}">View all Course</a></li>
-              <li><a href="#" data-bs-toggle="modal" data-bs-target="#deleteAllCourse">Delete all Course</a></li>
-            </ul>
-          </li>
-          {% endif %}
-          {% if user.groups.all.0.name == 'student' %}
-            <li><a class="nav-link scrollto " href="{% url 'student_dashboard' %}">Dashboard</a></li>
-            <li><a class="nav-link scrollto " href="{% url 'student-course-mark' %}">Exam Scores</a></li>
-          {% endif %}
-          {% endif %}
-          <li><a class="nav-link scrollto " href="{% url 'changepassword' %}">Change Password</a></li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
-
-      <a href="{% url 'logout_user' %}" class="book-a-table-btn scrollto"><i class="bi bi-box-arrow-in-left"></i> Logout</a>
-
     </div>
+   
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+       
+          <a class="nav-link nav-profile d-flex align-items-center p-0" href="#">
+            <img src="{% static "assets/img/icon.jpg" %}" alt="" class="rounded-circle m-5" title="Profile Picture">
+          </a>
+
+          
+          </ul><!-- End Profile Dropdown Items -->
+        </li><!-- End Profile Nav -->
+
+      </ul>
+    </nav>
+
   </header><!-- End Header -->
 
-  <main id="main">
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        {% if user.groups.all.0.name == 'student' %}
+        <a class="nav-link collapsed" href="{% url 'student_dashboard' %}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+        {% endif %}
+        {% if user.groups.all.0.name == 'admin' %}
+        <a class="nav-link collapsed" href="{% url 'admin_dashboard' %}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+        {% endif %}
+      </li><!-- End Dashboard Nav -->
+
+      {% if user.is_authenticated %}
+      {% if user.groups.all.0.name == 'admin' %}
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-menu-button-wide"></i><span>LEVEL (session)</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#addLevel">
+              <i class="bi bi-circle"></i><span>Add Level</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{% url 'levels' %}">
+              <i class="bi bi-circle"></i><span>View all Level</span>
+            </a>
+          </li>
+          
+          
+        </ul>
+      </li><!-- End Components Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-bank2"></i><span>DEPARTMENT</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+         <li>
+          <li>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#addDepartment">
+              <i class="bi bi-circle"></i><span>Add Department</span>
+            </a>
+          </li>
+            <a href="{% url 'department' %}">
+              <i class="bi bi-circle"></i><span>View all Department</span>
+            </a>
+          </li>
+          
+        </ul>
+      </li><!-- End Forms Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-journal-text"></i><span>COURSE</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'import-courses' %}">
+              <i class="bi bi-circle"></i><span>Import Courses</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'course' %}">
+              <i class="bi bi-circle"></i><span>View all Courses</span>
+            </a>
+          </li>
+          
+        </ul>
+      </li><!-- End Tables Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-person-square"></i><span>STUDENT</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'all-student' %}">
+              <i class="bi bi-circle"></i><span>List Students</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'import-students' %}">
+              <i class="bi bi-circle"></i><span>Import Students</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteAllStudent">
+              <i class="bi bi-circle"></i><span>Delete all Students</span>
+            </a>
+          </li>
+          
+        </ul>
+      </li><!-- End Charts Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-question-square-fill"></i><span>QUESTION</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'import-question' %}">
+              <i class="bi bi-circle"></i><span>Import Questions</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'question' %}">
+              <i class="bi bi-circle"></i><span>View all Questions</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteAllQuestion">
+              <i class="bi bi-circle"></i><span>Delete all Questions</span>
+            </a>
+          </li>
+          
+        </ul>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#result-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-file-earmark-medical-fill"></i><span>RESULT</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="result-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'all_results' %}">
+              <i class="bi bi-circle"></i><span>View all Student Results</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#resetAllResult">
+              <i class="bi bi-circle"></i><span>Reset all Student Result</span>
+            </a>
+          </li>
+          
+        </ul>
+      </li><!-- End Icons Nav -->
+          
+      <li class="nav-heading">Links</li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'examaccess' %}">
+          <i class="bi bi-mailbox2"></i>
+          <span>Exam Control</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'studentaccess' %}">
+          <i class="bi bi-person"></i>
+          <span>Access Control</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'exammode' %}">
+          <i class="bi bi-mailbox2"></i>
+          <span>Students in Exam Mode</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'submitmode' %}">
+          <i class="bi bi-mailbox2"></i>
+          <span>Students submitted</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'changepassword' %}">
+          <i class="bi bi-key"></i>
+          <span>Change Password</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 't_c' %}">
+          <i class="bi bi-patch-exclamation-fill"></i>
+          <span>ReadMe T/C and functions</span>
+        </a>
+      </li>
+
+      {% endif %}
+      {% if user.groups.all.0.name == 'student' %}
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'student-course-mark' %}">
+          <i class="bi bi-file-earmark-medical-fill"></i>
+          <span>Exam Scores</span>
+        </a>
+      </li>
+      {% endif %}
+      {% endif %}
+    </ul>
+
+  </aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
 
 {% block content %}
-    
+  
 {% endblock content %}
-    
+  
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
-  <footer id="footer">
-    <div class="container">
-      
-      <div class="credits">
-        Designed by <a href="https://bootstrapmade.com/">StarLiteCode</a>
-      </div>
-    </div>
-  </footer><!-- End Footer -->
+
+  {% include 'footer.html' %}
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
 
-  <div class="modal fade" id="deleteStudent" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Delete Student</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form method="POST" action="{% url 'delete-student' %}?next={{ request.GET.next }}">
-            {% csrf_token %}
-            <div class="mb-3 mt-3">
-              <input name ='matric' type="text" class="form-control" placeholder="Enter Matric No of the Student" required>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn" style=" background-color: #E6101B; color: white;">Delete</button>
-        </form>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div class="modal fade" id="deleteAllStudent" tabindex="-1">
     <div class="modal-dialog">
@@ -199,26 +337,6 @@
     </div>
   </div>
 
-  <div class="modal fade" id="deleteAllCourse" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Delete All Course</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p style="font-weight: bolder;">
-            !!!! ARE YOU SURE YOU WANT TO DELETE ALL COURSES
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <a href="{% url 'del-all-courses' %}?next={{ request.GET.next }}"><button type="button" class="btn btn" style=" background-color: #E6101B; color: white;">Yes, Sure</button></a>
-        
-        </div>
-      </div>
-    </div>
-  </div>
 
 
   <div class="modal fade" id="resetAllResult" tabindex="-1">
@@ -243,6 +361,7 @@
   </div>
 
 
+
   <div class="modal fade" id="addDepartment" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -254,8 +373,9 @@
           <form method="POST" action="{% url 'add-department' %}?next={{ request.GET.next }}">
             {% csrf_token %}
             <div class="mb-3 mt-3">
-              <input name ='department' type="text" class="form-control" placeholder="Department Name" required>
+              <input name ='department' type="text" class="" placeholder="Department Name" required>
             </div>
+            
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -265,6 +385,31 @@
       </div>
     </div>
   </div>
+
+
+  <div class="modal fade" id="addLevel" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Level</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'add-level' %}?next={{ request.GET.next }}">
+            {% csrf_token %}
+            <div class="mb-3 mt-3">
+              <input name ='name' type="text" class="" placeholder="Level Name: e.g: HND 1" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success" >Add Level</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div class="modal fade" id="addCourse" tabindex="-1">
     <div class="modal-dialog">
@@ -277,19 +422,19 @@
           <form method="POST" action="{% url 'add-course' %}?next={{ request.GET.next }}">
             {% csrf_token %}
             <div class="mb-3 mt-3">
-              <input name ='name' type="text" class="form-control" placeholder="Enter Course Name" required>
+              <input name ='name' type="text" class="" placeholder="Enter Course Name" required>
             </div>
             <div class="mb-3 mt-3">
-              <input name ='mark' type="number" class="form-control" placeholder="Enter Course Total Marks" required>
+              <input name ='mark' type="number" class="" placeholder="Enter Course Total Marks" required>
             </div>
             <div class="mb-3 mt-3">
-              <input name ='duration' type="number" class="form-control" placeholder="Enter Course Duration in Minutes" required>
+              <input name ='duration' type="number" class="" placeholder="Enter Course Duration in Minutes" required>
             </div>
             <div class="mb-3 mt-3">
-              <select class="form-select" name='department'>
+              <select multiple class="select1" name='department'>
                 <option value="">Choose Department</option>
                 {% for i in department %}
-                <option value="{{i.name}}">{{i.name}}</option>
+                <option class="mt-2" value="{{i.name}}">{{i.name}}</option>
                 {% endfor %}
               </select>
             </div>
@@ -305,28 +450,42 @@
 
 
 
-  <script>
-    const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-    
-    const d = new Date();
-    let day = days[d.getDay()];
-    document.getElementById("date").innerHTML = day;
-  </script>
-<script>
-    const f = new Date();
-    document.getElementById("time").innerHTML = f;
-    </script>
 
 
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/chart.js/chart.umd.js' %}"></script>
+  <script src="{% static 'assets/vendor/quill/quill.min.js' %}"></script>
   <script src="{% static '/jquery/jquery.min.js' %}"></script>
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
+  <script>
+            
+window.onload = function() {
+  const greetingIconElement = document.getElementById('greeting-icon');
+  const greetingTextElement = document.getElementById('greeting-text');
+  const currentTime = new Date();
+  const currentHour = currentTime.getHours();
+
+  let greetingIcon;
+  let greetingMessage;
+
+  if (currentHour >= 5 && currentHour < 12) {
+    greetingIcon = '🌞';
+    greetingMessage = 'Good morning';
+  } else if (currentHour >= 12 && currentHour < 18) {
+    greetingIcon = '☀️';
+    greetingMessage = 'Good afternoon';
+  } else {
+    greetingIcon = '🌆';
+    greetingMessage = 'Good evening';
+  }
+
+  greetingIconElement.textContent = greetingIcon;
+  greetingTextElement.textContent = greetingMessage;
+};
+  </script>
+
   {% include "msg.html" %}
 </body>
 

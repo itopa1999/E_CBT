@@ -5,24 +5,18 @@
 <style>
 </style>
 
-<section class="breadcrumbs">
-    <div class="container">
+<div class="pagetitle">
+  <h1>Exam Scores</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item">Exam Scores</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
 
-      <div class="d-flex justify-content-between align-items-center">
-        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
-        <ol>
-          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
-          <li>Exam Scores</li>
-          <li></li>
-        </ol>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <section class="inner-page">
+<section class="section">
     <div class="container-fluid">
         <div class="container">
             <table class="table">
@@ -37,10 +31,6 @@
                     <th>Total Marks</th>
                     <th>Correct Mark</th>
                     <th>Missed Marks</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Time Used</th>
-                    <th>Time Remaining</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -53,10 +43,6 @@
                     <td>{{i.total_marks}}</td>
                     <td>{{i.marks}}</td>
                     <td>{{i.missed_marks}}</td>
-                    <td>{{i.start_time}} </td>
-                    <td>{{i.end_time}}</td>
-                    <td>{{i.time_used}}</td>
-                    <td>{{i.time_remaining}} </td>
                     <td> <a href="{% url 'mark' i.id %}?next={{ request.GET.next }}"><button type="button" class="btn btn-success"><i class="bi bi-eye"></i> View Details</button></a></td>
                   </tr>
                   {% endfor %}

@@ -12,8 +12,7 @@ urlpatterns = [
     
     
     path('all-student', views.all_student, name='all-student'),
-    path('delete-student', views.del_student, name='delete-student'),
-    path('delete-student1/<int:pk>', views.del_student1, name='delete-student1'),
+    path('edit-student/<int:pk>', views.edit_student, name='edit-student'),
     path('add-student', views.add_student, name='add-student'),
     path('del-all-student', views.del_all_student, name='del-all-student'),
     
@@ -21,14 +20,12 @@ urlpatterns = [
     
     path('add-department', views.add_department, name='add-department'),
     path('department', views.department, name='department'),
-    path('delete-department/<int:pk>', views.del_department, name='delete-department'),
     
     
     path('import-courses', views.import_courses, name='import-courses'),
     path('add-course', views.add_course, name='add-course'),
     path('course', views.course, name='course'),
-    path('delete-course/<int:pk>', views.del_course, name='delete-course'),
-    path('del-all-courses', views.del_all_courses, name='del-all-courses'),
+    path('edit-course/<int:pk>', views.edit_course, name='edit-course'),
     
     
     path('question', views.question, name='question'),
@@ -49,6 +46,46 @@ urlpatterns = [
     path('del-all-results', views.del_all_results, name='del-all-results'),
     path('del-result/<int:pk>', views.del_result, name='del-result'),
     path('filter-results-download', views.filter_results_download, name='filter-results-download'),
-
     
+    
+    
+    path('submitmode', views.submitmode, name='submitmode'),
+    path('exammode', views.exammode, name='exammode'),
+    
+    
+    path('studentaccess', views.studentaccess, name='studentaccess'),
+    path('examaccess', views.examaccess, name='examaccess'),
+    path('levels', views.levels, name='levels'),
+    path('add-level', views.add_level, name='add-level'),
+    
+    
+    path('startexam/<int:pk>', views.startexam, name='startexam'),
+    path('unstartexam/<int:pk>', views.unstartexam, name='unstartexam'),
+    path('endexam/<int:pk>', views.endexam, name='endexam'),
+    
+    path('activate_student/<int:pk>', views.activate_student, name='activate_student'),
+    path('deactivate_student/<int:pk>', views.deactivate_student, name='deactivate_student'),
+    path('unendexam/<int:pk>', views.unendexam, name='unendexam'),
+    
+    path('exam_per_on', views.exam_per_on, name='exam_per_on'),
+    path('exam_per_off', views.exam_per_off, name='exam_per_off'),
+    path('exam_submit_on', views.exam_submit_on, name='exam_submit_on'),
+    path('exam_submit_off', views.exam_submit_off, name='exam_submit_off'),
+    path('student_permission_on', views.student_permission_on, name='student_permission_on'),
+    path('student_permission_off', views.student_permission_off, name='student_permission_off'),
+    path('view_result_on', views.view_result_on, name='view_result_on'),
+    path('view_result_off', views.view_result_off, name='view_result_off'),
+    path('stop_time_on', views.stop_time_on, name='stop_time_on'),
+    path('stop_time_off', views.stop_time_off, name='stop_time_off'),
+    
+    
+    path('filter-start-exam-on', views.filter_start_exam_on, name='filter-start-exam-on'),
+    path('filter-start-exam-off', views.filter_start_exam_off, name='filter-start-exam-off'),
+    path('filter-exam-submit-on', views.filter_exam_submit_on, name='filter-exam-submit-on'),
+    path('filter-exam-submit-off', views.filter_exam_submit_off, name='filter-exam-submit-off'),
+    
+    path('t_c', views.tc, name='t_c'),
+    
+    path('filter-student-permission-on', views.filter_student_permission_on, name='filter-student-permission-on'),
+    path('filter-student-permission-off', views.filter_student_permission_off, name='filter-student-permission-off'),
 ]

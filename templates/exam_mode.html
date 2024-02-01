@@ -31,25 +31,19 @@
 
 </style>
 
-<section class="breadcrumbs">
-    <div class="container">
+<div class="pagetitle">
+  <h1>Exam Mode</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'exam-details' course.id %}">Exam Details</a></li>
+      <li class="breadcrumb-item">Exam Mode</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
 
-      <div class="d-flex justify-content-between align-items-center">
-        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
-        <ol>
-            <li><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
-            <li><a href="{% url 'exam-details' course.id %}">Exam Details</a></li>
-            <li>Exam Mode</li>
-            <li></li>
-        </ol>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <section class="inner-page">
+<section class="section">
     <div class="container">
       <h4 class="card-title text-danger"  style="margin:5px;">
         <article class="clock" id="model3">                 
@@ -71,33 +65,33 @@
             
             
               <div class="form-check mx-4">
-                <input class="form-check-input " style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.option1}}" value="Option1">
-                <label class="form-check-label" style="font-size: 20px;" for="option1">
-                  {{q.option1}}
+                <input class="form-check-input " style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.A}}" value="A">
+                <label class="form-check-label" style="font-size: 20px;" for="A">
+                  {{q.A}}
                 </label>
               </div>
     
             
               <div class="form-check mx-4">
-                <input class="form-check-input " style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.option2}}" value="Option2">
-                <label class="form-check-label" style="font-size: 20px;" for="option2">
-                  {{q.option2}}
+                <input class="form-check-input " style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.B}}" value="B">
+                <label class="form-check-label" style="font-size: 20px;" for="B">
+                  {{q.B}}
                 </label>
               </div>
     
             
               <div class="form-check mx-4">
-                <input class="form-check-input" style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.option3}}" value="Option3">
-                <label class="form-check-label" style="font-size: 20px;" for="option3">
-                  {{q.option3}}
+                <input class="form-check-input" style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.C}}" value="C">
+                <label class="form-check-label" style="font-size: 20px;" for="C">
+                  {{q.C}}
                 </label>
               </div>
     
             
               <div class="form-check mx-4">
-                <input class="form-check-input " style="font-size: 20px;"  type="radio" name="{{ q.id }}" id="{{q.option4}}" value="Option4">
-                <label class="form-check-label " style="font-size: 20px;" for="option4">
-                  {{q.option4}}
+                <input class="form-check-input " style="font-size: 20px;"  type="radio" name="{{ q.id }}" id="{{q.D}}" value="D">
+                <label class="form-check-label " style="font-size: 20px;" for="D">
+                  {{q.D}}
                 </label>
               </div>
     
@@ -114,7 +108,9 @@
         </form>
         
     </div>
-    
+  </div>
+</section>
+
     <script> 
       function saveAns(){  
   
@@ -285,6 +281,33 @@ function restoreSelectedRadio() {
   });
 </script>
 
-    </div>
-  </section>
+<script>
+  function CheckData() {
+    const submittingButton = document.getElementById("submitButton");
+          fetch('{% url "access_mode" course.id %}')
+          .then(response => response.json())
+          .then(data => {
+              if (`${data.stu}` == 'false'){
+                window.location.href = '{% url "exam-details" course.id %}'
+              }
+              if (`${data.control}` === 'false'){
+                window.location.href = '{% url "exam-details" course.id %}'
+              }
+              if (`${data.end_exam}` === 'false'){
+                submittingButton.click();
+              }
+              })
+          .catch(error => {
+              // Handle errors
+              console.error('Error fetching admin dashboard data:', error);
+          });
+  }
+
+  // Load data every 2 seconds
+  setInterval(CheckData, 2000);
+
+  CheckData();
+</script>
+
+   
         {% endblock content %}

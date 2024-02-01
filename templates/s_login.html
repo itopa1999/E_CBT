@@ -14,9 +14,9 @@
     <link href="{% static 'assets/img/favicon.jpeg' %}" rel="icon">
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" type="text/css" href="{% static '/css/bootstrap.min.css' %}">
-    <link href="{% static '/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static '/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
 
-        <link href="{% static 'bootstrap/css/sb-admin-2.min.css' %}" rel="stylesheet">
+        <link href="{% static '/assets/css/sb-admin-2.min.css' %}" rel="stylesheet">
 
 </head>
 
@@ -39,7 +39,8 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!<br>Student</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!<br>Student<br><i class="bi bi-lock-fill" style="font-size: xx-large;"></i>
+                                        </h1>
                                     </div>
                                     <form method="POST" class="user">
                                         {% csrf_token %}
@@ -81,8 +82,6 @@
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static '/jquery/jquery.min.js' %}"></script>
-    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static '/bootstrap/js/main.js' %}"></script>
     <script>
       function myFunction() {
         var x = document.getElementById("password");

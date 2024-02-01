@@ -6,28 +6,22 @@
 
 </style>
 
-<section class="breadcrumbs">
-    <div class="container">
 
-      <div class="d-flex justify-content-between align-items-center">
-        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
-        <ol>
-          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
-          <li>All Students</li>
-          <li></li>
-        </ol>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <section class="inner-page">
+<div class="pagetitle">
+  <h1>All Student</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item">All Student</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+<section class="section">
     <div class="container-fluid">
       <div class="container">
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStudent1"><i class="bi bi-person-fill"></i>. Add Student</button>
-        <a href="{% url 'import-students' %}"><button type="button" class="btn btn-primary"><i class="bi bi-people-fill"></i>. Import Students</button></a>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStudent1"><i class="bi bi-person-square"></i>. Add Student</button>
+        <a href="{% url 'import-students' %}"><button type="button" class="btn btn-primary"><i class="bi bi-upload"></i>. Import Students</button></a>
         <button data-bs-toggle="modal" data-bs-target="#deleteAllStudent1" type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i>. Delete all Students</button>
         <button data-bs-toggle="modal" data-bs-target="#filterStudent" type="button" class="btn btn-info text-white"><i class="bi bi-filter"></i>. Filters</button>
         
@@ -56,7 +50,7 @@
             <td>{{i.last_name}}</td>
             <td>{{i.userid}}</td>
             <td>{{i.department}}</td>
-            <td> <a href="{% url 'delete-student1' i.id %}?next={{ request.GET.next }}"><button type="button" class="btn btn" style=" background-color: #E6101B; color: white;">Delete</button></a></td>
+            <td> <a href="{% url 'edit-student' i.id %}?next={{ request.GET.next }}"><button type="button" class="btn btn-success" >Edit</button></a></td>
           </tr>
           {% endfor %}
         </tbody>
@@ -80,28 +74,29 @@
         <form method="POST" action="{% url 'add-student' %}?next={{ request.GET.next }}">
           {% csrf_token %}
           <div class="mb-3 mt-3">
-            <input name ='first_name' type="text" class="form-control" placeholder=" First Name of the Student" required>
+            <input name ='first_name' type="text" class="" placeholder=" First Name of the Student" required>
           </div>
 
           <div class="mb-3 mt-3">
-            <input name ='last_name' type="text" class="form-control" placeholder="Last Name of the Student" required>
+            <input name ='last_name' type="text" class="" placeholder="Last Name of the Student" required>
           </div>
 
           <div class="mb-3 mt-3">
-            <input name ='matric' type="text" class="form-control" placeholder="Matric No of the Student" required>
+            <input name ='matric' type="text" class="" placeholder="Matric No of the Student" required>
           </div>
 
           <div class="mb-3 mt-3">
-            <select class="form-select" name='department'>
+            <select class="select" name='department' required>
+              <option value="">Choose Student Department</option>
               {% for i in department %}
-              <option value="{{i.name}}">{{i.name}}</option>
+              <option class="mt-3" value="{{i.name}}">{{i.name}}</option>
               {% endfor %}
             </select>
           </div>
 
           <p class="mt-3 text-danger">
               <li class=" text-danger">Avoid Typo error.</li>
-              <li class=" text-danger">Default password for all students to login is "pass1234"</li>
+              <li class=" text-danger">Default password for all students to login is "student Lastname"</li>
           </p>
 
         
@@ -148,19 +143,19 @@
       <div class="modal-body">
         <form method="get">
           <div class="mb-3 mt-3">
-            <input name ='first_name' type="text" class="form-control" placeholder=" First Name of the Student" >
+            <input name ='first_name' type="text" class="" placeholder=" First Name of the Student" >
           </div>
 
           <div class="mb-3 mt-3">
-            <input name ='last_name' type="text" class="form-control" placeholder="Last Name of the Student" >
+            <input name ='last_name' type="text" class="" placeholder="Last Name of the Student" >
           </div>
 
           <div class="mb-3 mt-3">
-            <input name ='userid' type="text" class="form-control" placeholder="Matric No of the Student" >
+            <input name ='userid' type="text" class="" placeholder="Matric No of the Student" >
           </div>
 
           <div class="mb-3 mt-3">
-            <select class="form-select" name='department'>
+            <select class="select" name='department'>
               <option value="">Choose Department</option>
               {% for i in department %}
               <option value="{{i.id}}">{{i.name}}</option>

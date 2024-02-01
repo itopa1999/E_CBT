@@ -1,0 +1,124 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+</style>
+
+<div class="pagetitle">
+    <h1>Exam Access Control</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item">Exam Access Control</li>
+        <li class="breadcrumb-item"></li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="container-fluid">
+      <div class="container-fluid">
+        <div class="container">
+          <button data-bs-toggle="modal" data-bs-target="#filterCourse" type="button" class="btn btn-info text-white"><i class="bi bi-filter"></i>. Filters</button>
+        </div>
+      <table class="table">
+        <h2 class="mt-5">Total Courses: {{ course|length }}</h2>
+        {% if course %}
+        
+        <thead>
+          
+          <tr>
+            <th>Course Name</th>
+            <th>Total Marks</th>
+            <th>Duration</th>
+            <th>Start Exam Permission</th>
+            <th>Exam Submit Control</th>
+          </tr>
+        </thead>
+        
+        <tbody>
+          {% for i in course %}
+          <tr>
+            <td>{{i.name}}</td>
+            <td>{{i.total_marks}}</td>
+            <td>{{i.duration}} minutes</td>
+            <td>
+              
+              {% if i.control == True %}
+              <a href="{% url 'startexam' i.id %}?next={{ request.GET.next }}"><i class="bi bi-toggle-on" style="color:#2f589e; font-size: 40px; "></i></a>
+            </td>
+            
+              {% else %}
+              <a href="{% url 'unstartexam' i.id %}?next={{ request.GET.next }}"><i class="bi bi-toggle-off" style="color:#2f589e; font-size: 40px; "></i></a>
+              
+            </td>
+              {% endif %}
+            </td>
+          <td>
+            {% if i.exam_control == True %}
+            <a href="{% url 'endexam' i.id %}?next={{ request.GET.next }}"><i class="bi bi-toggle-on" style="color:#2f589e; font-size: 40px; "></i></a></td>
+            {% else %}
+            <a href="{% url 'unendexam' i.id %}?next={{ request.GET.next }}"><i class="bi bi-toggle-off" style="color:#2f589e; font-size: 40px; "></i></a></td>
+            {% endif %}
+          </tr>
+        </tr>
+          {% endfor %}
+        </tbody>
+        {% else %}
+          <center><h2 style="font-weight: bolder;" class="text-danger mt-5"> NO COURSE FOUND</h2></center>
+          {% endif %}
+      </table>
+
+    </div>
+</section>
+
+
+<div class="modal fade" id="filterCourse" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Filter Course</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="get" action="#" id="myForm1">
+          <div class="mb-3 mt-3">
+            <input name ='name' type="text" class="" placeholder=" Course Name" >
+          </div>
+          <div class="mb-3 mt-3">
+            <select class="select" name='department'>
+              <option value="">Choose Department</option>
+              {% for i in department %}
+              <option value="{{i.id}}">{{i.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3 mt-3">
+            <select class="select" name='course__level'>
+              <option value="">Choose Course Level</option>
+              {% for i in level %}
+              <option value="{{i.id}}">{{i.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-white shadow border-success" onclick="submitForm('{% url 'filter-start-exam-on' %}')" >Filter & Start Exam ON</button>|
+        <button type="button" class="btn btn-white shadow border-danger" onclick="submitForm('{% url 'filter-start-exam-off' %}')" >Filter & Start Exam OFF</button>|
+        <button type="button" class="btn btn-white shadow border-success" onclick="submitForm('{% url 'filter-exam-submit-on' %}')" >Filter & Exam Submit ON</button>|
+        <button type="button" class="btn btn-white shadow border-danger" onclick="submitForm('{% url 'filter-exam-submit-off' %}')" >Filter & Exam Submit OFF</button>|
+        <button type="button" class="btn btn-success" onclick="submitForm('{% url 'examaccess' %}')">Filter</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function submitForm(url){
+      document.getElementById('myForm1').action =url;
+      document.getElementById('myForm1').submit();
+  }
+</script>
+{% endblock content %}

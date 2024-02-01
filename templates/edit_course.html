@@ -1,0 +1,54 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+</style>
+
+<div class="pagetitle">
+  <h1>Edit Course</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'course' %}">Courses</a></li>
+      <li class="breadcrumb-item">Edit Course</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+<section class="section">
+    <div class="container-fluid">
+        <center>
+            <div class="p-5 col-lg-7">
+                <div class="text-center">
+                    <h1 class="h4 text-gray-900 mb-4">Update {{cou.name}}</h1>
+                </div>
+                <form method="POST" class="user">
+                    {% csrf_token %}
+                    <div class="mb-3 mt-3">
+                        <label for="">Course Name</label>
+                        {{form.name}}                      
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="">Course Departments</label>
+                        {{form.department}}                      
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="">Course Duaration</label>
+                        {{form.duration}}                      
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="">Course Total Marks</label>
+                        {{form.total_marks}}                      
+                    </div>
+                      
+                    <button type="submit" class="btn btn-success btn-user btn-block">
+                        Update
+                    </button>
+                    <hr>
+                  </form>
+        </div>
+    </center>
+    </div>
+</section>
+{% endblock content %}

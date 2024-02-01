@@ -3,42 +3,37 @@
 
 {% block content %}
 <style>
-  input[type=text], select {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
+
 </style>
 
-<section class="breadcrumbs">
-    <div class="container">
 
-      <div class="d-flex justify-content-between align-items-center">
-        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
-        <ol>
-          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
-          <li>Import Questions</li>
-          <li></li>
-        </ol>
-      </div>
+<div class="pagetitle">
+  <h1>Import Questions</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'question' %}">Questions</a></li>
+      <li class="breadcrumb-item">Import Questions</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
 
-    </div>
-  </section>
+<div class="container">
+  <button class='btn btn-success' onclick="objQuestions()">Objective Questions Import</button> 
+  <a href="{% url 'soon' %}"><button class='btn btn-success' onclick="theoryQuestions()">Theory Questions Import</button></a>
+</div>
+<br>
 
-
-
-  <section class="inner-page">
+<section class="section" id="obj">
     <div class="container-fluid">
+      <h2 class="text-muted">IMPORT OBJECTIVES QUESTIONS</h2>
       <div class="container">
         <a href="{% url 'excel-download2' %}"><button type="button" class="btn btn-primary"><i class="bi bi-upload"></i>. Download Sample Template</button></a>
         
       </div>
       <br><br>
-      <div style=" justify-content: center; align-items: center; height: 90vh; text-align: center;">
+      <div style=" justify-content: center; align-items: center; height: 140vh; text-align: center;">
         <h1>Follow this example below</h1>
         <div>
           <img src="{% static 'assets/img/template_sample2.JPG' %}" alt="Your Image">
@@ -49,14 +44,14 @@
                 {% csrf_token %}
                 <div class="mb-3 mt-3">
                   <label for="" class="text-danger">file must be in 'xlsx', 'csv', xlx </label>
-                  <input name ='import_file' type="file" class="form-control" required>
+                  <input name ='import_file' type="file" class="" required>
                   
                 </div>
                 <div class="mb-3 mt-3">
-                  <label for="">Choose Course that owns this importing questions.</label>
-                  <select class="form-select" name='course' required>
+                  <select multiple class="select1" name='course' required>
+                    <option value="">Choose Course that owns this importing questions.</option>
                     {% for i in course %}
-                    <option value="{{i.name}}">{{i.name}}</option>
+                    <option class="mt-2" value="{{i.name}}">{{i.name}}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -70,4 +65,64 @@
 
     </div>
 </section>
+
+
+
+<section class="section" id="theory" style="display: none;">
+  <h2 class="text-muted">IMPORT THEORIES QUESTIONS</h2>
+  <div class="container-fluid">
+    <div class="container">
+      <a href="{% url 'excel-download3' %}"><button type="button" class="btn btn-primary"><i class="bi bi-upload"></i>. Download Sample Template</button></a>
+      
+    </div>
+    <br><br>
+    <div style=" justify-content: center; align-items: center; height: 140vh; text-align: center;">
+      <h1>Follow this example below</h1>
+      <div>
+        <img src="{% static 'assets/img/template4.JPG' %}" alt="Your Image">
+        <br><br>
+        <center>
+          <p>
+            <form enctype="multipart/form-data" action="{% url 'import-theory-question-data' %}" method="POST" class="col-lg-5">
+              {% csrf_token %}
+              <div class="mb-3 mt-3">
+                <label for="" class="text-danger">file must be in 'xlsx', 'csv', xlx </label>
+                <input name ='import_file' type="file" class="" required>
+                
+              </div>
+              <div class="mb-3 mt-3">
+                <select multiple class="select1" name='course' required>
+                  <option value="">Choose Course that owns this importing questions.</option>
+                  {% for i in course %}
+                  <option class="mt-2" value="{{i.name}}">{{i.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <button type="submit" class="btn btn-success" >Upload</button>
+            </form>
+          </p>
+        </center>
+      </div>
+
+  </div>
+
+  </div>
+</section>
+
+
+<script>
+  function objQuestions() {
+      var x = document.getElementById("obj");
+      var y = document.getElementById("theory");
+      x.style.display = "block"
+      y.style.display = "none"
+  }
+
+  function theoryQuestions() {
+    var x = document.getElementById("obj");
+    var y = document.getElementById("theory");
+      x.style.display = "none"
+      y.style.display = "block"
+  }
+  </script>
 {% endblock content %}

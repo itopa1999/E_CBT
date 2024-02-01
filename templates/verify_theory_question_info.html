@@ -1,0 +1,56 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+</style>
+<div class="pagetitle">
+  <h1>Verify Question information</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'import-question' %}">Import Question</a></li>
+      <li class="breadcrumb-item">Verify Question information</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+<section class="section">
+    <div class="container-fluid">
+
+<form autocomplete="off" method="post" action="{% url 'verify-theory-question-data' %}">
+    {% csrf_token %}
+    <table class='table'>
+      <p class='text-info'>{{count}} Questions information is found in {{new_data}}, view below to verify</p>
+      <thead>  <!-- Add thead element for the table header -->
+        <tr>
+          <th>S/N</th>
+            <th>Question</th>
+            <th>Teacher's Answer</th>
+            <th>Marks</th>
+            <th>Course</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+            <td>{{ row.question }}</td>
+            <td>{{ row.teacher_answer }}</td>
+            <td>{{ row.marks }}</td>
+            <td>{{ row.course }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <input type="submit" class='btn btn-success' name="confirm" value="Confirm">
+    <a type="button" class='btn btn-danger' href="{% url 'import-question' %}">Cancel</a>
+</form>
+
+
+
+</div>
+</section>
+{% endblock content %}

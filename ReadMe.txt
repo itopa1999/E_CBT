@@ -23,7 +23,7 @@ STALITECODE
 5. finally run another command, python manage.py runserver
 6. open Broswer and write this url to login:
     i. for admin:  http://localhost:8000/admins/login/
-    ii. for student:  http://localhost:8000/student/login
+    ii. for student:  http://localhost:8000
 
 *
 *
@@ -42,7 +42,7 @@ STALITECODE
 
 7. open Broswer and write this url to login:
     i. for admin:  http://IP-address:8000/admins/login/
-    ii. for student:  http://IP-address:8000/student/login
+    ii. for student:  http://IP-address:8000
 
 
 
@@ -53,6 +53,7 @@ password = admin
 
 
 **** How to use ****
+add level if required
 1. add new department
 2. add new course
 3. add student(s)

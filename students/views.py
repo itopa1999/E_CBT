@@ -29,33 +29,6 @@ def is_student(user):
 
 
 
-def login_user(request):
-    if request.method == "POST":
-        userid = request.POST.get('userid').lower()
-        user = authenticate(request, userid=userid, password=request.POST.get('password'))
-        if user is not None:
-            login(request, user)
-            user.login = True
-            user.save()
-            if is_admin(user):
-                messages.error(request, 'Account with UserID ' + str(request.POST.get('userid')).upper() + ' is not for this view Loggin here')
-                return redirect('login_admin')
-            elif is_student(user):
-                next_url =request.GET.get('next')
-                return redirect(next_url or 'student_dashboard')
-        else:
-            messages.error(request, 'Account with UserID ' + str(request.POST.get('userid')).upper() + ' not found or Incorrect Password')
-    try:
-        if request.user.is_authenticated:
-            user = request.user
-            user.login = False
-            user.save()
-    except Exception as e:
-        print("Error:", e)
-    logout(request)
-    return render(request, "s_login.html")
-
-
 @login_required(login_url='login_student')
 @student_only
 def pre_video(request):
@@ -90,7 +63,17 @@ def exam_details(request, pk):
 @login_required(login_url='login_student')
 @student_only
 def exam_mode(request, pk):
+    user = request.user
     course=Course.objects.get(id=pk)
+    if course.exam_control == False:
+        messages.error(request, "Exam has error request administrator to turn on 'EXAM SUBMIT'")
+        return redirect('exam-details', course.id)
+    if course.control == False:
+        messages.info(request, 'Exam has not yet be started by the administrator')
+        return redirect('exam-details', course.id)
+    if user.exam == False:
+        messages.info(request, 'Contact the administrator to activate your account')
+        return redirect('exam-details', course.id)
     questions=Question.objects.all().filter(course=course).order_by('?')
     if request.method=='POST':
         pass
@@ -123,13 +106,21 @@ def exam_mode(request, pk):
 @login_required(login_url='login_student')
 @student_only
 def student_course_mark(request):
-    result = Result.objects.filter(student = request.user)
+    cou,created=Settings.objects.get_or_create(id=1)
+    if cou.view_result == False:
+        messages.info(request, 'This view is disabled by the system administrator')
+        return redirect('student_dashboard')
+    result = Result.objects.filter(student = request.user).exclude(total_marks = 0)
     return render(request, 'student_course_mark.html', {'result':result})
 
 
 @login_required(login_url='login_student')
 @student_only
 def mark(request, pk):
+    cou,created=Settings.objects.get_or_create(id=1)
+    if cou.view_result == False:
+        messages.info(request, 'This view is disabled by the system administrator')
+        return redirect('student_dashboard')
     result = Result.objects.get(id=pk)
     total_marks = result.marks
     missed_marks = result.missed_marks

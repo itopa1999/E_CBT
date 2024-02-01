@@ -6,24 +6,17 @@
 
 </style>
 
-<section class="breadcrumbs">
-    <div class="container">
-
-      <div class="d-flex justify-content-between align-items-center">
-        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
-        <ol>
-          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
-          <li>Department</li>
-          <li></li>
-        </ol>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <section class="inner-page">
+<div class="pagetitle">
+  <h1>Department</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item">Department</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+<section class="section">
     <div class="container-fluid">
         <div class="container">
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addDepartment"><i class="bi bi-bank2"></i>. Add Department</button>
@@ -38,7 +31,7 @@
               <tr>
                 <th>S/N</th>
                 <th>Name</th>
-                <th>Action</th>
+                <th>Level</th>
               </tr>
             </thead>
             
@@ -47,7 +40,7 @@
               <tr>
                 <td>{{forloop.counter}}</td>
                 <td>{{i.name}}</td>
-                <td> <a href="{% url 'delete-department' i.id %}?next={{ request.GET.next }}"><button type="button" class="btn btn" style=" background-color: #E6101B; color: white;">Delete</button></a></td>
+                <td>{{i.level}}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -60,4 +53,7 @@
 
     </div>
 </section>
+
+
+
 {% endblock content %}

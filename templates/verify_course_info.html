@@ -6,25 +6,19 @@
 
 </style>
 
-<section class="breadcrumbs">
-    <div class="container">
 
-      <div class="d-flex justify-content-between align-items-center">
-        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
-        <ol>
-          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
-          <li><a href="{% url 'import-courses' %}">Import courses</a></li>
-          <li>Verify Courses information</li>
-          <li></li>
-        </ol>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <section class="inner-page">
+<div class="pagetitle">
+  <h1>Verify Courses information</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'import-courses' %}">Import courses</a></li>
+      <li class="breadcrumb-item">Verify Courses information</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+<section class="section">
     <div class="container-fluid">
 
 <form autocomplete="off" method="post" action="{% url 'verify-course-data' %}">
@@ -33,7 +27,7 @@
       <p class='text-info'>{{count}} Courses information is found in {{new_data}}, view below to verify</p>
       <thead>  <!-- Add thead element for the table header -->
         <tr>
-          
+          <th>S/N</th>
             <th>Course Name</th>
             <th>Total Marks</th>
             <th>Duration (in minutes)</th>
@@ -45,7 +39,7 @@
         {% for row in data %}
         <tr>
           <td>{{ forloop.counter }}</td>
-            <td>{{ row.name }}</td>
+        <td>{{ row.name }}</td>
       <td>{{ row.total_marks }}</td>
       <td>{{ row.duration }}</td>
       <td>{{ row.department }}</td>
@@ -54,7 +48,7 @@
       </tbody>
     </table>
     <input type="submit" class='btn btn-success' name="confirm" value="Confirm">
-    <a type="button" class='btn btn-danger' href="{% url 'import-students' %}">Cancel</a>
+    <a type="button" class='btn btn-danger' href="{% url 'import-courses' %}">Cancel</a>
 </form>
 
 

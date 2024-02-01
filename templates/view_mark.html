@@ -3,55 +3,40 @@
 
 {% block content %}
 <style>
-  .pagination {
-    max-width: 900px;
-    display: flex;
-    flex-wrap: wrap; 
-    justify-content: justify; 
-  }
-  
-  .pagination li {
-    margin: 0 5px;
-  }
-  .blink {
-    animation: blinker 1s step-start infinite;
-}
-
-@keyframes blinker {
-    0% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
 
 </style>
 
-<section class="breadcrumbs">
-    <div class="container">
-
-      <div class="d-flex justify-content-between align-items-center">
-        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
-        <ol>
-            <li><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
-            <li><a href="{% url 'exam-details' course.id %}">Exam Details</a></li>
-            <li>Exam Mode</li>
-            <li>Exam Scores</li>
-            <li></li>
-        </ol>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <section class="inner-page">
+<div class="pagetitle">
+  <h1>Exam Scores</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'exam-details' course.id %}">Exam Details</a></li>
+      <li class="breadcrumb-item">Exam Mode</li>
+      <li class="breadcrumb-item">Exam Scores</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+{% if cou == True %}
+<section class="section">
     <div class="container-fluid">
+      <div class="card m-2 col-lg-5 p-2 border-0 shadow">
+        <div class="card-body">
+          <h4 class="card-title">Exam Score Details :</h4>
+            <p class="card-text" >
+                <ul style="list-style:decimal;" >
+                    <li>Course : {{course.name}}</li>
+                    <li>Total Question : {{ questions|length }}</li>
+                    <li>Total Marks : {{total_marks}}</li>
+                    <li>Exam Duration: {{duration}}</li>
+                    <br>
+                    <li>Mark : <span class="text-success">{{total_marks}}</span></li>
+                    <li>Missed Marks : <span class="text-danger">{{missed_marks}}</span></li>
+                </ul>
+              </p>
+        </div>
+      </div>
       <div class="row">
         <div class="col-xl-8 col-lg-7 ">
                 <!-- Card Body -->
@@ -90,7 +75,12 @@
 
     </div>
 </section>
-
+{% else %}
+          <center><h2 style="font-weight: bolder;" class="text-danger mt-5"> ACCESS TO VIEW YOUR SCORES IS BLOCKED <br> BY SYSTEM ADMINISTRATOR</h2>
+          <br><br>
+          <a href="{% url 'student_dashboard' %}"><button type="button" class="btn btn-primary"><i class="bi bi-grid"></i>. Dashboard</button></a>
+          </center>
+          {% endif %}
 <script src="{% static 'chart.js/Chart.min.js' %}"></script>
 
 

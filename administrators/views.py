@@ -1,6 +1,6 @@
 # builtin import
 
-from django.shortcuts import render, redirect,reverse
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.paginator import *
 from django.core.exceptions import *
@@ -19,7 +19,7 @@ from .forms import *
 from .filters import *
 from .decorators import *
 from users.models import *
-from exam.models import Course,Result,Question
+from exam.models import Course,Result,Question, Settings
 from students.models import ExamMode,Submitted
 # Create your views here.
 
@@ -93,7 +93,12 @@ def admin_dashboard(request):
     total_student = User.objects.filter(groups = Group.objects.get(name='student')).count()
     total_course = Course.objects.all().count()
     total_department = Department.objects.all().count()
-    context = {'total_student':total_student, 'total_course':total_course,'total_department':total_department}
+    cou, created =Settings.objects.get_or_create(id=1)
+    exam = Course.objects.filter(control=True).count() == Course.objects.all().count()
+    exam_submit = Course.objects.filter(exam_control=True).count() == Course.objects.all().count()
+    student_permission = User.objects.filter(exam=True, groups = Group.objects.get(name='student')).count() == User.objects.filter(groups = Group.objects.get(name='student')).count()
+    context = {'total_student':total_student, 'total_course':total_course,'exam_submit':exam_submit,'student_permission':student_permission,
+               'total_department':total_department,'exam':exam,'cou':cou}
     return render(request, 'a_index.html', context)
 
 
@@ -137,27 +142,19 @@ def add_student(request):
 
 @login_required(login_url='login_admin')
 @admin_only
-def del_student(request):
-    if request.method == 'POST':
-        matric = request.POST.get('matric').lower()
-        try:
-            stu=User.objects.get(userid=matric)
-            stu.delete()
-            messages.success(request, 'Student has been deleted successfully')
-        except:
-            messages.error(request, 'Student with Matric NO ' + str(request.POST.get('matric')).upper() + ' not found')
-        next_url =request.GET.get('next')
-        return redirect(next_url or 'all-student')
-    pass
-
-@login_required(login_url='login_admin')
-@admin_only
-def del_student1(request, pk):
+def edit_student(request, pk):
     stu=User.objects.get(id=pk)
-    stu.delete()
-    messages.success(request, 'Student has been deleted successfully')
-    next_url =request.GET.get('next')
-    return redirect(next_url or 'all-student')
+    form = UserChangeForm(instance = stu)
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=stu)
+        if form.is_valid():
+            form.save()
+            messages.success(request, str(stu.first_name) +' successfully update')
+        messages.error(request, form.errors)
+    context = {'stu':stu,'form':form}
+    return render(request, 'edit_student.html', context)
+
+
 
 @login_required(login_url='login_admin')
 @admin_only
@@ -182,7 +179,8 @@ def import_students(request):
 @admin_only
 def department(request):
     department = Department.objects.all()
-    context = {'department':department}
+    level = Level.objects.all()
+    context = {'department':department,'level':level}
     return render(request, 'department.html', context)
 
 
@@ -190,26 +188,22 @@ def department(request):
 @admin_only
 def add_department(request):
     if request.method == 'POST':
-        try:
-            Department.objects.create(
-                name = request.POST.get('department').upper()
-            )
-            
-            messages.success(request, request.POST.get('department').upper() + ' Added successfully')
-        except:
-            messages.error(request, 'Department all ready exist')
-            
+        name = request.POST.get('department').upper()
+        levels = Level.objects.all()
+        for index, level in enumerate(levels):
+            try:
+                department_name = f"{name} - Department {level.name}"
+                Department.objects.create(
+                    name = department_name,
+                    level = level
+                )
+            except:
+                messages.error(request, 'Department all ready exist')
+        messages.success(request, request.POST.get('department').upper() + ' Added successfully')
         next_url =request.GET.get('next')
         return redirect(next_url or 'department')
 
-@login_required(login_url='login_admin')
-@admin_only
-def del_department(request, pk):
-    dep=Department.objects.get(id=pk)
-    dep.delete()
-    messages.success(request, dep.name +' successfully deleted')
-    next_url =request.GET.get('next')
-    return redirect(next_url or 'department')
+
 
 
 @login_required(login_url='login_admin')
@@ -231,9 +225,10 @@ def add_course(request):
                 total_marks = request.POST.get('mark'),
                 duration = request.POST.get('duration')
             )
-            dep = Department.objects.get(name=request.POST.get('department'))
-            cou.department = dep
-            cou.save()
+            dep = Department.objects.filter(name__in=request.POST.getlist('department'))
+            for dep in dep:
+                cou.department.add(dep)
+                cou.save()
             messages.success(request, request.POST.get('name').upper() + ' Added successfully')
         except:
             messages.error(request, 'Course already exist or duration error or invalid department')
@@ -241,31 +236,37 @@ def add_course(request):
         next_url =request.GET.get('next')
         return redirect(next_url or 'course')
 
+
 @login_required(login_url='login_admin')
 @admin_only
-def del_course(request, pk):
+def edit_course(request, pk):
     cou=Course.objects.get(id=pk)
-    cou.delete()
-    messages.success(request, cou.name +' successfully deleted')
-    next_url =request.GET.get('next')
-    return redirect(next_url or 'course')
+    form = CourseForm(instance=cou)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=cou)
+        if form.is_valid():
+            form.save()
+            messages.success(request, str(cou.name) +' successfully update')
+        messages.error(request, form.errors)
+    context = {'form':form,'cou':cou}
+    return render(request, 'edit_course.html', context)
+
+
 
 @login_required(login_url='login_admin')
 @admin_only
 def course(request):
     course=Course.objects.all()
     department = Department.objects.all()
-    context = {'course':course,'department':department}
+    level = Level.objects.all()
+    myFilter=CourseFilter(request.GET, queryset=course)
+    course=myFilter.qs
+    context = {'course':course,'department':department,'level':level}
     return render(request, 'course.html', context)
 
-@login_required(login_url='login_admin')
-@admin_only
-def del_all_courses(request):
-    cou=Course.objects.all()
-    cou.delete()
-    messages.success(request,'All courses successfully deleted')
-    next_url =request.GET.get('next')
-    return redirect(next_url or 'course')
+
+
+
 
 
 
@@ -277,15 +278,19 @@ def add_question(request):
             question = Question.objects.create(
                 marks = request.POST.get('mark'),
                 question = request.POST.get('question'),
-                option1 = request.POST.get('option1'),
-                option2 = request.POST.get('option2'),
-                option3 = request.POST.get('option3'),
-                option4 = request.POST.get('option4'),
+                A = request.POST.get('A'),
+                B = request.POST.get('B'),
+                C = request.POST.get('C'),
+                D = request.POST.get('D'),
                 answer = request.POST.get('answer')
             )
-            cou = Course.objects.get(name=request.POST.get('course'))
-            question.course = cou
-            question.save()
+            cou = Course.objects.filter(name__in=request.POST.getlist('course'))
+            for cou in cou:
+                cou.exam_control = True
+                cou.control = False
+                cou.save()
+                question.course.add(cou)
+                question.save()
             messages.success(request, request.POST.get('question').upper() + ' Added successfully')
         except:
             messages.error(request, 'Question already exist or options error or invalid course')
@@ -298,7 +303,11 @@ def add_question(request):
 @admin_only
 def question(request):
     course=Course.objects.all()
-    context = {'course':course}
+    department = Department.objects.all()
+    level = Level.objects.all()
+    myFilter=CourseFilter(request.GET, queryset=course)
+    course=myFilter.qs
+    context = {'course':course,'department':department,'level':level}
     return render(request, 'question.html', context)
 
 
@@ -334,6 +343,11 @@ def import_question(request):
 def del_all_question(request):
     que=Question.objects.all()
     que.delete()
+    cou = Course.objects.all()
+    for cou in cou:
+        cou.exam_control = True
+        cou.control = False
+        cou.save()
     messages.success(request,'All Question successfully deleted')
     next_url =request.GET.get('next')
     return redirect(next_url or 'question')
@@ -342,6 +356,9 @@ def del_all_question(request):
 @admin_only
 def del_course_question(request, name):
     course=Course.objects.get(name=name)
+    course.exam_control = True
+    course.control = False
+    course.save()
     question = Question.objects.filter(course=course)
     question.delete()
     messages.success(request,'All Questions for ' + str(course.name) + ' successfully deleted')
@@ -351,7 +368,7 @@ def del_course_question(request, name):
 @login_required(login_url='login_admin')
 @admin_only
 def all_results(request):
-    result = Result.objects.all()
+    result = Result.objects.exclude(total_marks = 0)
     department = Department.objects.all()
     course = Course.objects.all()
     myFilter=ResultFilter(request.GET, queryset=result)
@@ -366,7 +383,7 @@ def filter_results_download(request):
     result=myFilter.qs
     
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename ="imported_results.csv"'
+    response['Content-Disposition'] = 'attachment; filename ="Reult.csv"'
     
     csv_writer = csv.writer(response)
     header_row = [field_name.verbose_name for field_name in Result._meta.fields]
@@ -422,11 +439,132 @@ def del_result(request, pk):
 
 
 
+@login_required(login_url='login_admin')
+@admin_only
+def submitmode(request):
+    mode = Submitted.objects.all()
+    department = Department.objects.all()
+    myFilter=SubmittedFilter(request.GET, queryset=mode)
+    mode=myFilter.qs
+    return render(request, 'submitmode.html', {'mode':mode,'department':department})
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def exammode(request):
+    mode = ExamMode.objects.all()
+    department = Department.objects.all()
+    myFilter=ExamModeFilter(request.GET, queryset=mode)
+    mode=myFilter.qs
+    return render(request, 'exammode.html', {'mode':mode,'department':department})
+
+@login_required(login_url='login_admin')
+@admin_only
+def studentaccess(request):
+    student = User.objects.filter(groups = Group.objects.get(name='student'))
+    department = Department.objects.all()
+    myFilter=StudentFilter(request.GET, queryset=student)
+    student=myFilter.qs
+    return render(request, 'studentaccess.html', {'student':student,'department':department})
+
+@login_required(login_url='login_admin')
+@admin_only
+def activate_student(request, pk):
+    user = User.objects.get(id = pk)
+    user.exam = True
+    user.save()
+    messages.success(request, 'Students has been successfully Activated to writing the exam')
+    return redirect('studentaccess')
+
+@login_required(login_url='login_admin')
+@admin_only
+def deactivate_student(request, pk):
+    user = User.objects.get(id = pk)
+    user.exam = False
+    user.save()
+    messages.success(request, 'Students has been successfully Deactivated from writing the exam')
+    return redirect('studentaccess')
+
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def examaccess(request):
+    course=Course.objects.all().order_by('control')
+    department = Department.objects.all()
+    level = Level.objects.all()
+    myFilter=CourseFilter(request.GET, queryset=course)
+    course=myFilter.qs
+    context = {'course':course,'department':department,'level':level}
+    return render(request, 'examaccess.html',context)
+
+@login_required(login_url='login_admin')
+@admin_only
+def startexam(request, pk):
+    course = Course.objects.get(id = pk)
+    course.control = True
+    course.save()
+    messages.success(request, 'Students can now start ' + str(course.name) + ' Exam now')
+    return redirect('examaccess')
+
+@login_required(login_url='login_admin')
+@admin_only
+def unstartexam(request, pk):
+    course = Course.objects.get(id = pk)
+    course.control = False
+    course.save()
+    messages.success(request, 'All Students Writing ' + str(course.name) + ' exam will be kicked out of the exam')
+    return redirect('examaccess')
+
+@login_required(login_url='login_admin')
+@admin_only
+def endexam(request, pk):
+    course = Course.objects.get(id = pk)
+    course.exam_control = False
+    course.save()
+    messages.success(request, 'All Students Writing ' + str(course.name) + 'exam will be auto submitted')
+    return redirect('examaccess')
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def unendexam(request, pk):
+    course = Course.objects.get(id = pk)
+    course.exam_control = True
+    course.save()
+    messages.success(request, 'Successfully Un-end exam, students can now write exams')
+    return redirect('examaccess')
+
+@login_required(login_url='login_admin')
+@admin_only
+def levels(request):
+    level = Level.objects.all()
+    return render(request, 'levels.html', {'level':level})
+
+@login_required(login_url='login_admin')
+@admin_only
+def add_level(request):
+    if request.method == 'POST':
+        try:
+            Level.objects.create(
+                name = request.POST.get('name').upper()
+            )
+            messages.success(request, 'Level ' + str(request.POST.get('name').upper()) + ' successfully added')
+        except:
+            messages.error(request, 'Level ' + str(request.POST.get('name').upper()) + ' may already exist')
+        next_url =request.GET.get('next')
+        return redirect(next_url or 'levels')
+    pass
+
+
+
 def decline(request):
     return render(request, 'decline.html')
 
 
-
+@login_required(login_url='login_admin')
+@admin_only
 def changepassword(request):
     user = request.user
     if user.is_authenticated:
@@ -442,3 +580,191 @@ def changepassword(request):
         
         return render(request, 'changepassword.html')
     return redirect('login_student')
+
+
+#...........................................................................
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def exam_per_on(request):
+    cou = Course.objects.all()
+    cou.update(control = True)
+    messages.success(request,'All Course has been set to start exam')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def exam_per_off(request):
+    cou = Course.objects.all()
+    cou.update(control = False)
+    messages.success(request,'All Course has been set to not start exam')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def exam_submit_on(request):
+    cou = Course.objects.all()
+    cou.update(exam_control = True)
+    messages.success(request,'All Exams will be submitted Automatically')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def exam_submit_off(request):
+    cou = Course.objects.all()
+    cou.update(exam_control = False)
+    messages.success(request,'All Exams set to normal')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def student_permission_on(request):
+    cou = User.objects.filter(groups = Group.objects.get(name='student'))
+    cou.update(exam = True)
+    messages.success(request,'All Student can start exam')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def student_permission_off(request):
+    cou = User.objects.filter(groups = Group.objects.get(name='student'))
+    cou.update(exam = False)
+    messages.success(request,'All Student cannot start exam')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def view_result_on(request):
+    cou,created=Settings.objects.get_or_create(id=1)
+    cou.view_result = True
+    cou.save()
+    messages.success(request,'All Students can view Result')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def view_result_off(request):
+    cou,created=Settings.objects.get_or_create(id=1)
+    cou.view_result = False
+    cou.save()
+    messages.success(request,'All Students cannot view Result.')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def stop_time_on(request):
+    cou,created=Settings.objects.get_or_create(id=1)
+    cou.stop_time = True
+    cou.save()
+    messages.success(request,'All Exam time has been paused.')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def stop_time_off(request):
+    cou,created=Settings.objects.get_or_create(id=1)
+    cou.stop_time = False
+    cou.save()
+    messages.success(request,'All Exam time will start or continue.')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def filter_start_exam_on(request):
+    course=Course.objects.all().order_by('control')
+    myFilter=CourseFilter(request.GET, queryset=course)
+    course=myFilter.qs
+    course.update(control = True)
+    messages.success(request, 'filtered Value has been updated accordindly')
+    return redirect('examaccess')
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def filter_start_exam_off(request):
+    course=Course.objects.all().order_by('control')
+    myFilter=CourseFilter(request.GET, queryset=course)
+    course=myFilter.qs
+    course.update(control = False)
+    messages.success(request, 'filtered Value has been updated accordindly')
+    return redirect('examaccess')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def filter_exam_submit_on(request):
+    course=Course.objects.all().order_by('control')
+    myFilter=CourseFilter(request.GET, queryset=course)
+    course=myFilter.qs
+    course.update(exam_control = True)
+    messages.success(request, 'filtered Value has been updated accordindly')
+    return redirect('examaccess')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def filter_exam_submit_off(request):
+    course=Course.objects.all().order_by('control')
+    myFilter=CourseFilter(request.GET, queryset=course)
+    course=myFilter.qs
+    course.update(exam_control = False)
+    messages.success(request, 'filtered Value has been updated accordindly')
+    return redirect('examaccess')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def filter_student_permission_on(request):
+    student = User.objects.filter(groups = Group.objects.get(name='student'))
+    myFilter=StudentFilter(request.GET, queryset=student)
+    student=myFilter.qs
+    student.update(exam = True)
+    messages.success(request, 'filtered Value has been updated accordindly')
+    return redirect('studentaccess')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def filter_student_permission_off(request):
+    student = User.objects.filter(groups = Group.objects.get(name='student'))
+    myFilter=StudentFilter(request.GET, queryset=student)
+    student=myFilter.qs
+    student.update(exam = False)
+    messages.success(request, 'filtered Value has been updated accordindly')
+    return redirect('studentaccess')
+
+
+
+def tc(request):
+    return render(request, 'tc.html')

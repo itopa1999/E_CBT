@@ -5,24 +5,17 @@
 <style>
 </style>
 
-<section class="breadcrumbs">
-    <div class="container">
-
-      <div class="d-flex justify-content-between align-items-center">
-        <h2><span id="greeting-icon"></span> <span id="greeting-text"></span> {{user.first_name}}</h2>
-        <ol>
-          <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
-          <li>All Results</li>
-          <li></li>
-        </ol>
-      </div>
-
-    </div>
-  </section>
-
-
-
-  <section class="inner-page">
+<div class="pagetitle">
+  <h1>All Results</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item">All Results</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+<section class="section">
     <div class="container-fluid">
         <div class="container-fluid">
             <div class="container">
@@ -91,38 +84,33 @@
         <div class="modal-body">
           <form method="get" action="#" id="myForm">
             <div class="mb-3 mt-3">
-              <input name ='student__first_name' type="text" class="form-control" placeholder=" First Name of the Student" >
+              <input name ='student__first_name' type="text" class="" placeholder=" First Name of the Student" >
             </div>
   
             <div class="mb-3 mt-3">
-              <input name ='student__last_name' type="text" class="form-control" placeholder="Last Name of the Student" >
+              <input name ='student__last_name' type="text" class="" placeholder="Last Name of the Student" >
             </div>
   
             <div class="mb-3 mt-3">
-              <input name ='student__userid' type="text" class="form-control" placeholder="Matric No of the Student" >
+              <input name ='student__userid' type="text" class="" placeholder="Matric No of the Student" >
             </div>
-
-            <div class="mb-3 mt-3">
-                <input name ='student__department' type="text" class="form-control" placeholder="Department of the Student" >
+              <div class="mb-3 mt-3">
+                <input name ='marks__lte' type="text" class="" placeholder="Score less than ......" >
               </div>
 
               <div class="mb-3 mt-3">
-                <input name ='marks__lte' type="text" class="form-control" placeholder="Score less than ......" >
-              </div>
-
-              <div class="mb-3 mt-3">
-                <input name ='marks__gte' type="text" class="form-control" placeholder="Score greater than ......" >
+                <input name ='marks__gte' type="text" class="" placeholder="Score greater than ......" >
               </div>
   
             <div class="mb-3 mt-3">
-              <select class="form-select" name='student__department'>
+              <select class="select" name='student__department'>
                 <option value="">Choose Department</option>
                 {% for i in department %}
                 <option value="{{i.id}}">{{i.name}}</option>
                 {% endfor %}
               </select>
 
-              <select class="form-select mt-3" name='exam'>
+              <select class="select mt-3" name='exam'>
                 <option value="">Choose Course</option>
                 {% for i in course %}
                 <option value="{{i.id}}">{{i.name}}</option>
@@ -132,7 +120,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-info" onclick="submitForm('{% url 'filter-results-download' %}')" >Filter & Download</button>
+          <button type="button" class="btn btn-primary" onclick="submitForm('{% url 'filter-results-download' %}')" >Filter & Download</button>
           <button type="button" class="btn btn-success" onclick="submitForm('{% url 'all_results' %}')">Filter</button>
         </form>
         </div>
