@@ -45,11 +45,10 @@
             <td>
               
               {% if i.control == True %}
-              <a href="{% url 'startexam' i.id %}?next={{ request.GET.next }}"><i class="bi bi-toggle-on" style="color:#2f589e; font-size: 40px; "></i></a>
+              <a href="{% url 'unstartexam' i.id %}?next={{ request.GET.next }}"><i class="bi bi-toggle-on" style="color:#2f589e; font-size: 40px; "></i></a>
             </td>
-            
               {% else %}
-              <a href="{% url 'unstartexam' i.id %}?next={{ request.GET.next }}"><i class="bi bi-toggle-off" style="color:#2f589e; font-size: 40px; "></i></a>
+              <a href="{% url 'startexam' i.id %}?next={{ request.GET.next }}"><i class="bi bi-toggle-off" style="color:#2f589e; font-size: 40px; "></i></a>
               
             </td>
               {% endif %}

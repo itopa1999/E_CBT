@@ -224,7 +224,12 @@
       </li><!-- End Icons Nav -->
           
       <li class="nav-heading">Links</li>
-
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'e-pin' %}">
+          <i class="bi bi-shield-lock"></i>
+          <span>E-Pin</span>
+        </a>
+      </li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'examaccess' %}">
           <i class="bi bi-mailbox2"></i>
@@ -251,12 +256,7 @@
           <span>Students submitted</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'changepassword' %}">
-          <i class="bi bi-key"></i>
-          <span>Change Password</span>
-        </a>
-      </li>
+      
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 't_c' %}">
           <i class="bi bi-patch-exclamation-fill"></i>
@@ -274,6 +274,18 @@
       </li>
       {% endif %}
       {% endif %}
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'changepassword' %}">
+          <i class="bi bi-key"></i>
+          <span>Change Password</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'logout_user' %}">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </li>
     </ul>
 
   </aside><!-- End Sidebar-->

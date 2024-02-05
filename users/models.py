@@ -26,9 +26,9 @@ class Department(models.Model):
     level =models.ForeignKey(Level,on_delete=models.SET_NULL,null=True, blank=True)
     
     class Meta:
-        ordering = ['-name']
+        ordering = ['level']
         indexes = [
-            models.Index(fields=['-name']),
+            models.Index(fields=['level']),
         ]
     def __str__(self):
         return f"{self.name}"
@@ -53,9 +53,9 @@ class User(AbstractUser):
     REQUIRED_FIELDS=[]
 
     class Meta:
-        ordering = ['-userid']
+        ordering = ['-department']
         indexes = [
-            models.Index(fields=['-userid']),
+            models.Index(fields=['-department']),
         ]
     
     def __str__(self):

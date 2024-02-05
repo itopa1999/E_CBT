@@ -26,7 +26,7 @@ def is_student(user):
 def login_user(request):
     if request.method == "POST":
         userid = request.POST.get('userid').lower()
-        user = authenticate(request, userid=userid, password=request.POST.get('password'))
+        user = authenticate(request, userid=userid, password=request.POST.get('password').lower())
         if user is not None:
             login(request, user)
             user.login = True

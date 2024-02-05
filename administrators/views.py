@@ -11,7 +11,8 @@ from django.core.exceptions import *
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.models import Group
 import csv
-
+from reportlab.pdfgen import canvas
+from io import BytesIO
 
 # app import
 from .models import *
@@ -400,6 +401,7 @@ def filter_results_download(request):
 @admin_only
 def admin_view_mark(request, pk):
     result = Result.objects.get(id=pk)
+    questions = Question.objects.filter(course=result.exam)
     total_marks = result.marks
     missed_marks = result.missed_marks
     total_mark = total_marks + missed_marks
@@ -415,7 +417,8 @@ def admin_view_mark(request, pk):
         percent_missed = 0
         
     num1=[percent_correct,percent_missed]
-    context = {'num1':num1,'num':num,'result':result,'percent_correct':percent_correct,'percent_missed':percent_missed}
+    context = {'num1':num1,'num':num,'result':result,'percent_correct':percent_correct,'percent_missed':percent_missed,
+               'questions':questions}
     return render(request, 'admin_view_mark.html', context)
 
 @login_required(login_url='login_admin')
@@ -563,8 +566,7 @@ def decline(request):
     return render(request, 'decline.html')
 
 
-@login_required(login_url='login_admin')
-@admin_only
+@login_required(login_url='student_admin')
 def changepassword(request):
     user = request.user
     if user.is_authenticated:
@@ -611,7 +613,7 @@ def exam_per_off(request):
 def exam_submit_on(request):
     cou = Course.objects.all()
     cou.update(exam_control = True)
-    messages.success(request,'All Exams will be submitted Automatically')
+    messages.success(request,'All Exams set to normal')
     next_url =request.GET.get('next')
     return redirect(next_url or 'admin_dashboard')
 
@@ -621,7 +623,7 @@ def exam_submit_on(request):
 def exam_submit_off(request):
     cou = Course.objects.all()
     cou.update(exam_control = False)
-    messages.success(request,'All Exams set to normal')
+    messages.success(request,'All Exams will be submitted Automatically')
     next_url =request.GET.get('next')
     return redirect(next_url or 'admin_dashboard')
 
@@ -768,3 +770,110 @@ def filter_student_permission_off(request):
 
 def tc(request):
     return render(request, 'tc.html')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def e_pin_off(request):
+    cou, created =Settings.objects.get_or_create(id=1)
+    cou.e_pin = False
+    cou.save()
+    messages.success(request, 'E-Pin Feature turn off')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def e_pin_on(request):
+    cou, created =Settings.objects.get_or_create(id=1)
+    cou.e_pin = True
+    cou.save()
+    messages.success(request, 'E-Pin Feature turn on')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'admin_dashboard')
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def expire_pins(request):
+    pin = E_Pin.objects.filter(used = True)
+    pin.update(expired=True)
+    messages.success(request, 'All used pins has been set to expired')
+    next_url =request.GET.get('next')
+    return redirect(next_url or 'e-pin')
+
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def e_pin(request):
+    pin = E_Pin.objects.all()
+    myFilter=PinFilter(request.GET, queryset=pin)
+    pin=myFilter.qs
+    context = {'pin':pin}
+    return render(request, 'e_pin.html', context)
+
+@login_required(login_url='login_admin')
+@admin_only
+def generate_pins(request):
+    cou, created =Settings.objects.get_or_create(id=1)
+    if cou.e_pin == True:
+        unassigned_unused_pins = E_Pin.objects.unassigned_and_unused_pins()
+        if unassigned_unused_pins.exists():
+            messages.info(request, "There's still "+ str(unassigned_unused_pins.count()) + " Unused Pins")
+            return redirect('e-pin')
+        for _ in range(50):
+            random_number = random.randint(1000000000, 9999999999)
+            instance = E_Pin(pin=f'ajp{random_number}')
+            instance.save()
+        messages.success(request, 'Pins Generated')
+    messages.error(request, 'You must have to turn this feature on in the setting')
+    return redirect('e-pin')
+        
+
+def generate_unused_pin_pdf(request):
+    # Get unassigned and unused pins using the custom manager
+    unassigned_unused_pins = E_Pin.objects.unassigned_and_unused_pins()
+
+    # Create a BytesIO buffer to write the PDF
+    buffer = BytesIO()
+
+    # Create the PDF object, using the BytesIO buffer as its "file"
+    pdf = canvas.Canvas(buffer)
+
+    # Set the page size
+    page_width, page_height = 612, 792  # Standard letter size (8.5 x 11 inches)
+    pdf.setPageSize((page_width, page_height))
+
+    # Set initial y_position
+    y_position = page_height - 50
+
+    # Add a title to the first page
+    pdf.setFont("Helvetica-Bold", 16)
+    pdf.drawString(100, y_position, "UNUSED PIN")
+
+    # Add a counter for each pin on multiple pages
+    pdf.setFont("Helvetica", 12)
+    counter = 1
+
+    for pin in unassigned_unused_pins:
+        if y_position <= 50:
+            # Start a new page
+            pdf.showPage()
+            y_position = page_height - 50
+        pdf.drawString(100, y_position - 20, f"{counter}. {pin.pin}")
+        y_position -= 20
+        counter += 1
+
+    # Save the PDF content
+    pdf.save()
+
+    # FileResponse sets the Content-Disposition header so that browsers
+    # present the option to save the file.
+    buffer.seek(0)
+    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="unused_pins.pdf"'
+    return response

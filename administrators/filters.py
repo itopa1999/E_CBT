@@ -58,3 +58,13 @@ class CourseFilter(django_filters.FilterSet):
     class Meta:
         model = Course
         fields = ['name','department','course__level']
+        
+
+class PinFilter(django_filters.FilterSet):
+    first_name = django_filters.CharFilter(field_name='student__first_name', lookup_expr='icontains')
+    last_name = django_filters.CharFilter(field_name='student__last_name', lookup_expr='icontains')
+    userid = django_filters.CharFilter(field_name='student__userid', lookup_expr='icontains')
+    pin = django_filters.CharFilter(field_name='pin', lookup_expr='icontains')
+    class Meta:
+        model = E_Pin
+        fields = ['first_name','last_name','userid','pin']

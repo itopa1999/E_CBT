@@ -139,7 +139,7 @@ class Theory_File(models.Model):
 class Settings(models.Model):
     view_result = models.BooleanField(default=False, null=True, blank=True)
     stop_time = models.BooleanField(default=False, null=True, blank=True)
-    
+    e_pin = models.BooleanField(default=False, null=True, blank=True)
     class Meta:
         ordering = ['-view_result']
         indexes = [

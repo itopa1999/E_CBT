@@ -1295,7 +1295,7 @@ h6 {
   outline: none;
 }
 
-input[type=text], input[type=number], input[type=file], .select, textarea, select {
+input[type=text], input[type=number], input[type=file],input[type=password], .select, textarea, select {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;

@@ -16,9 +16,9 @@ from datetime import timedelta
 # app import
 from .models import *
 from exam.models import *
-from administrators.decorators import student_only
+from administrators.decorators import student_only, pin_only
 from users.models import *
-from administrators.models import Access_Count
+from administrators.models import Access_Count,E_Pin
 
 # Create your views here.
 
@@ -42,9 +42,56 @@ def student_dashboard(request):
     context = {'course':course}
     return render(request, 's_index.html', context)
 
+@login_required(login_url='login_student')
+@student_only
+def pins_settings(request, pk):
+    course = Course.objects.get(id=pk)
+    cou, created =Settings.objects.get_or_create(id=1)
+    if cou.e_pin == False:
+        return redirect('exam-details', pk)
+    return render(request, 'pins_settings.html',{'course':course})
+
+
 
 @login_required(login_url='login_student')
 @student_only
+def verify_e_pin(request, pk):
+    if request.method == 'POST':
+        pin_entered = request.POST.get('pin_entered').lower()
+        if E_Pin.objects.filter(student=request.user,pin=pin_entered, used=True, expired=False).exists():
+            messages.success(request, 'PIN Valid.')
+            return redirect('exam-details', pk)
+        pins = E_Pin.objects.filter(pin=pin_entered, used=True)
+        if pins.exists():
+            if pins.filter(student__isnull=False).exclude(student=request.user).exists():
+                messages.info(request, 'This PIN has already been used by another student.')
+                return redirect('pins_settings', pk)
+        expired_pin = E_Pin.objects.filter(student=request.user,pin=pin_entered, used=True, expired=True).first()
+        if expired_pin:
+            messages.error(request, 'Error: This Pin has expired.')
+            return redirect('pins_settings', pk)
+        try:
+            pin_coun= E_Pin.objects.filter(student=request.user, used=True,expired=False).count()
+            if pin_coun > 1:
+                messages.info(request, 'You already have an unexpired PIN, Please try the pin that has not be expired')
+                return redirect('pins_settings', pk)
+            pin = E_Pin.objects.get(pin=pin_entered, used=False, expired=False)
+            pin.student = request.user
+            pin.used = True
+            pin.save()
+            messages.success(request, 'PIN successfully validated.')
+            return redirect('exam-details', pk)
+
+        except E_Pin.DoesNotExist:
+            messages.error(request, 'Error: Invalid PIN.')
+            return redirect('pins_settings', pk)
+        
+        
+        
+
+@login_required(login_url='login_student')
+@student_only
+@pin_only
 def exam_details(request, pk):
     course=Course.objects.get(id=pk)
     total_questions=Question.objects.all().filter(course=course).count()
@@ -62,6 +109,7 @@ def exam_details(request, pk):
 
 @login_required(login_url='login_student')
 @student_only
+@pin_only
 def exam_mode(request, pk):
     user = request.user
     course=Course.objects.get(id=pk)

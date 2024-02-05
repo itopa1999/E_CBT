@@ -160,7 +160,7 @@ def calculate_marks_view(request):
         duration = f"{hours:02d} hours : {minutes:02d} minutes"
         view_result,created=Settings.objects.get_or_create(id=1)
         cou = view_result.view_result
-        context = {'num1':num1,'num':num,'course':course,'percent_correct':percent_correct,
+        context = {'num1':num1,'num':num,'course':course,'percent_correct':percent_correct,'result':result,
                    'percent_missed':percent_missed,'total_marks':total_marks,'duration':duration,'questions':questions,
                    'total_mark':total_mark,'missed_marks':missed_marks,'total_marks':total_marks,'cou':cou}
         return render(request, 'view_mark.html', context)

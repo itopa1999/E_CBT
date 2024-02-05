@@ -28,7 +28,7 @@
                 <ul style="list-style:decimal;" >
                     <li>Course : {{course.name}}</li>
                     <li>Total Question : {{ questions|length }}</li>
-                    <li>Total Marks : {{total_marks}}</li>
+                    <li>Total Marks : {{result.total_marks}}</li>
                     <li>Exam Duration: {{duration}}</li>
                     <br>
                     <li>Mark : <span class="text-success">{{total_marks}}</span></li>
@@ -37,6 +37,7 @@
               </p>
         </div>
       </div>
+      <br><br>
       <div class="row">
         <div class="col-xl-8 col-lg-7 ">
                 <!-- Card Body -->
@@ -71,6 +72,8 @@
                 </div>
             </div>
         </div>
+
+    </div>
     </div>
 
     </div>

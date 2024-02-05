@@ -28,7 +28,7 @@
               <div class="box mt-3">
                 <span><i class="bi bi-journal-text" style="font-size:50px;"></i></span>
                 <p style="font-size:30px; font-weight: bolder;">{{i.name}}</p>
-                <p class='mt-3'><button type="button" class="btn btn-white shadow" style="font-weight: bolder;"><a href="{% url 'exam-details' i.id %}"><i class="bi bi-pencil"></i> Enter Exam Mode</a></button></p>
+                <p class='mt-3'><button type="button" class="btn btn-white shadow" style="font-weight: bolder;"><a href="{% url 'pins_settings' i.id %}"><i class="bi bi-pencil"></i> Enter Exam Mode</a></button></p>
               </div>
             </div>
             {% endfor %}

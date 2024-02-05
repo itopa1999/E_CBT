@@ -88,4 +88,13 @@ urlpatterns = [
     
     path('filter-student-permission-on', views.filter_student_permission_on, name='filter-student-permission-on'),
     path('filter-student-permission-off', views.filter_student_permission_off, name='filter-student-permission-off'),
+
+    path('e-pin-on', views.e_pin_on, name='e-pin-on'),
+    path('e-pin-off', views.e_pin_off, name='e-pin-off'),
+    path('e-pin', views.e_pin, name='e-pin'),
+    
+    path('generate-pins', views.generate_pins, name='generate-pins'),
+    path('generate_unused_pin_pdf', views.generate_unused_pin_pdf, name='generate_unused_pin_pdf'),
+    path('expire_pins', views.expire_pins, name='expire_pins'),
+    
 ]

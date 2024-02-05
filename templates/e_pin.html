@@ -1,0 +1,107 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+</style>
+
+<div class="pagetitle">
+  <h1>E-Pin</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item">E-Pin</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+<section class="section">
+    <div class="container-fluid">
+        <div class="container">
+            <a href="{% url 'generate-pins' %}"><button type="button" class="btn btn-success" ><i class="bi bi-shield-lock"></i>. Generate Pin</button></a>
+            <a href="{% url 'generate_unused_pin_pdf' %}"><button type="button" class="btn btn-primary"><i class="bi bi-upload"></i>. Download Un-used Pins</button></a>
+            <button data-bs-toggle="modal" data-bs-target="#filterPin" type="button" class="btn btn-info text-white"><i class="bi bi-filter"></i>. Filters</button>
+            <a href="{% url 'expire_pins' %}"><button type="button" class="btn btn-danger"><i class="bi bi-exclamation-circle"></i>. Make used pins Expires</button></a>
+          </div>
+          <table class="table">
+            <h2 class="mt-5">Total Pins: {{ pin|length }}</h2>
+            {% if pin %}
+            
+            <thead>
+              
+              <tr>
+                <th>S/N</th>
+                <th>Student</th>
+                <th>Pin</th>
+                <th>Status</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            
+            <tbody>
+              {% for i in pin %}
+              <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{i.student}}</td>
+                <td>{{i.pin}}</td>
+                <td>
+                  {% if i.used == True %}
+                  USED <i class="bi bi-exclamation-circle text-danger"></i>
+                  {% else %}
+                  UNUSED <i class="bi bi-check-circle text-success"></i>
+                  {% endif %}
+                </td>
+                <td>
+                    {% if i.expired == True %}
+                    EXPIRED <i class="bi bi-exclamation-circle text-danger"></i>
+                    {% else %}
+                    NOT EXPIRED <i class="bi bi-check-circle text-success"></i>
+                    {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            {% else %}
+              <center><h2 style="font-weight: bolder;" class="text-danger mt-5"> NO PIN FOUND</h2></center>
+              {% endif %}
+          </table>
+    </div>
+</section>
+
+
+<div class="modal fade" id="filterPin" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Filter Pin</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="get">
+            <div class="mb-3 mt-3">
+              <input name ='first_name' type="text" class="" placeholder=" First Name of the Student" >
+            </div>
+  
+            <div class="mb-3 mt-3">
+              <input name ='last_name' type="text" class="" placeholder="Last Name of the Student" >
+            </div>
+  
+            <div class="mb-3 mt-3">
+              <input name ='userid' type="text" class="" placeholder="Matric No of the Student" >
+            </div>
+            <div class="mb-3 mt-3">
+                <input name ='pin' type="text" class="" placeholder="Pin" >
+              </div>
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success" >Filter</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+{% endblock content %}

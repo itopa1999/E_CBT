@@ -165,6 +165,17 @@
         <hr>
         <div class="clearfix">
           
+          {% if cou.e_pin == True %}
+          <span class="float-start">E_Pin ON</span>
+          <a href="{% url 'e-pin-off' %}?next={{ request.GET.next }}"><span class="float-end"><i class="bi bi-toggle-on" style="color:#2f589e; font-size: 30px; "></i></span></a>
+          {% else %}
+          <span class="float-start">E_Pin OFF</span>
+          <a href="{% url 'e-pin-on' %}?next={{ request.GET.next }}"><span class="float-end"><i class="bi bi-toggle-off" style="color:#2f589e; font-size: 30px; "></i></span></a>
+          {% endif %}
+      </div>
+        <hr>
+        <div class="clearfix">
+          
           {% if cou.stop_time == True %}
           <span class="float-start">Stop Time ON</span>
           <a href="{% url 'soon' %}?next={{ request.GET.next }}"><span class="float-end"><i class="bi bi-toggle-on" style="color:#2f589e; font-size: 30px; "></i></span></a>

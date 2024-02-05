@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+</style>
+<div class="pagetitle">
+  <h1>E-Pin Verification</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item">E-Pin Verification</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+<section class="section">
+        <div class="container">
+
+            <!-- Outer Row -->
+            <div class="row justify-content-center">
+                <div class="col-xl-10 col-lg-12 col-md-9">
+    
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card-body p-0">
+                            <!-- Nested Row within Card Body -->
+                            <div class="row">
+                                <div class="col-lg-6 d-none d-lg-block bg-login-image">
+                                    <img src="{% static "assets/img/login.jpeg" %}" width="440" height="440" alt="login image">
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="p-5">
+                                        <div class="text-center">
+                                            <h1 class="h4 text-gray-900 mb-4">Enter E-Pin to access<br>
+                                                {{course.name}} Exam <br><i class="bi bi-shield-lock" style="font-size: xx-large;"></i>
+                                            </h1>
+                                        </div>
+                                        <form method="POST" class="user" action="{% url 'verify_e_pin' course.id %}">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <input name="pin_entered" type="password" class="form-control form-control-user"
+                                                    id="password" placeholder="Enter E-Pin" required><p>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox small">
+                                                    <input type="checkbox"  onclick="myFunction()" class="custom-control-input" id="customCheck">
+                                                    <label class="custom-control-label" for="customCheck">Show Entered Pin</label>
+                                                </div>
+                                            </div>
+                                            <center><button type="submit" class="btn mt-4 btn-white border-primary rounded btn-user btn-block">
+                                                Verify Pin
+                                            </button></center>
+                                           
+                                        </form>
+                                        <hr>
+                                     
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                </div>
+    
+            </div>
+    
+        </div>
+    </div>
+</section>
+
+<script>
+    function myFunction() {
+      var x = document.getElementById("password");
+      if (x.type === "password") {
+          x.type = "text";
+      } else {
+          x.type = "password";
+      }
+  }
+</script>
+{% endblock content %}

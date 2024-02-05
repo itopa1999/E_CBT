@@ -66,7 +66,7 @@
             
               <div class="form-check mx-4">
                 <input class="form-check-input " style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.A}}" value="A">
-                <label class="form-check-label" style="font-size: 20px;" for="A">
+                <label class="form-check-label" style="font-size: 20px;" for="{{q.A}}">
                   {{q.A}}
                 </label>
               </div>
@@ -74,7 +74,7 @@
             
               <div class="form-check mx-4">
                 <input class="form-check-input " style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.B}}" value="B">
-                <label class="form-check-label" style="font-size: 20px;" for="B">
+                <label class="form-check-label" style="font-size: 20px;" for="{{q.B}}">
                   {{q.B}}
                 </label>
               </div>
@@ -82,7 +82,7 @@
             
               <div class="form-check mx-4">
                 <input class="form-check-input" style="font-size: 20px;" type="radio" name="{{ q.id }}" id="{{q.C}}" value="C">
-                <label class="form-check-label" style="font-size: 20px;" for="C">
+                <label class="form-check-label" style="font-size: 20px;" for="{{q.C}}">
                   {{q.C}}
                 </label>
               </div>
@@ -90,7 +90,7 @@
             
               <div class="form-check mx-4">
                 <input class="form-check-input " style="font-size: 20px;"  type="radio" name="{{ q.id }}" id="{{q.D}}" value="D">
-                <label class="form-check-label " style="font-size: 20px;" for="D">
+                <label class="form-check-label " style="font-size: 20px;" for="{{q.D}}">
                   {{q.D}}
                 </label>
               </div>
@@ -103,9 +103,31 @@
       <ul class="pagination"></ul>
     </div>
     <br><br><br><br>
-            <button id="submitButton" class="btn btn-success btn-lg" style="border-radius: 0%;"  type="submit"> <i class='bi bi-arrow-up-circle'></i> Submit Exam</button>
+            <button type='button' data-bs-toggle="modal" data-bs-target="#confirmSubmit" class="btn btn-success btn-lg" style="border-radius: 0%;"> <i class='bi bi-arrow-up-circle'></i> Submit Exam</button>
             <button class="btn btn-warning text-white btn-lg" style="border-radius: 0%;float:right;"  type="reset"> <i class='bi bi-arrow-repeat'></i></button>
-        </form>
+        
+
+            <div class="modal fade" id="confirmSubmit" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p style="font-weight: bolder;">
+                      !!!! ARE YOU SURE YOU WANT TO SUBMIT YOUR EXAM?
+                    </p>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="submitButton" type="submit" class="btn btn-success btn-lg" style="border-radius: 0%;"><i class='bi bi-arrow-up-circle'></i> Yes, Submit</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+        
+          </form>
         
     </div>
   </div>
@@ -210,10 +232,14 @@ function startCountdown(targetDate) {
 
       if (hours === 0 && minutes === 0 && seconds === 1) {
         timerElement.classList.remove("blink");
-      } else if (hours === 0 && minutes <= 1) {
+      } else if (hours === 0 && minutes <= 5) {
         timerElement.classList.add("blink");
       } else {
         timerElement.classList.remove("blink");
+      }
+
+      if (hours === 0 && minutes === 5 && seconds === 0) {
+        alert('You still have less than 5 minutes before the Exam ends. make sure you finish before the time expires');
       }
 
       const formattedHours = hours.toString().padStart(2, "0");

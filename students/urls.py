@@ -9,6 +9,7 @@ urlpatterns = [
     path('exam-details/<int:pk>', views.exam_details, name='exam-details'),
     path('mark/<int:pk>', views.mark, name='mark'),
     path('student-course-mark', views.student_course_mark, name='student-course-mark'),
-    path('demo', views.pre_video, name='demo'),
+    path('verify_e_pin/<int:pk>', views.verify_e_pin, name='verify_e_pin'),
+    path('pins_settings/<int:pk>', views.pins_settings, name='pins_settings'),
 
 ]
