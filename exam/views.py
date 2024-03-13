@@ -90,7 +90,21 @@ def excel_download3(request):
     return response
 
 
+@admin_only
+def excel_download4(request):
+    excel_file_path = finders.find('sample1.xlsx')
 
+    # Check if the file exists
+    if not excel_file_path:
+        raise FileNotFoundError(f"The file 'Command and Action Template.xlsx.xlsx' was not found in the static files.")
+
+    # Open the Excel file in binary mode
+    with open(excel_file_path, 'rb') as file:
+        # Create an HTTP response with the Excel content
+        response = HttpResponse(file, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=Action_template.xlsx'
+    
+    return response
 
 
 
@@ -119,7 +133,6 @@ def calculate_marks_view(request):
         questions=Question.objects.all().filter(course=course)
         for i in range(len(questions)):
             total_mark += questions[i].marks
-        for i in range(len(questions)):
             selected_ans_key = str(questions[i].id)
             selected_ans = request.COOKIES.get(selected_ans_key)
             actual_answer = questions[i].answer

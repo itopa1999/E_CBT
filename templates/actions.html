@@ -1,0 +1,64 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+</style>
+
+<div class="pagetitle">
+  <h1>Command and Action</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item">Command and Action</li>
+      <li class="breadcrumb-item"></li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+    <div class="container-fluid">
+      <div class="container">
+        <a href="{% url 'excel-download4' %}"><button type="button" class="btn btn-primary"><i class="bi bi-upload"></i>. Download Sample Template</button></a>
+        
+      </div>
+      <br><br>
+      <div style=" justify-content: center; align-items: center; height: 140vh; text-align: center;">
+        <h1>Follow this example below</h1>
+        <div>
+          <img src="{% static 'assets/img/template5.JPG' %}" alt="Your Image">
+          <br><br>
+          <center>
+            <p>
+              <form enctype="multipart/form-data" action="{% url 'import-action' %}" method="POST" class="col-lg-5">
+                {% csrf_token %}
+                <div class="mb-3 mt-3">
+                  <label for="" class="text-danger">file must be in 'xlsx', 'csv', xlx </label>
+                  <input name ='import_file' type="file" class="" required>
+                  
+                </div>
+                <div class="mb-3 mt-3"  >
+                  <label for="">Command and Action</label>
+                  <select class="select" name='action' required>
+                    <option value="">---- Choose Action ----</option>
+                    
+                    <option class="mt-2" value="activate">Activate Student(s) to write exam</option>
+                    <option class="mt-2" value="deactivate">Dectivate Student(s) from writing exam</option>
+                    <option class="mt-2" value="reset">Reset Student(s) scores to retake exam</option>
+                    <option class="mt-2" value="delete">Delete Student(s) from database with records</option>
+                    <option class="mt-2" value="{{i.name}}">{{i.name}}</option>
+                    
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-success" >Upload</button>
+              </form>
+            </p>
+          </center>
+        </div>
+
+    </div>
+
+    </div>
+</section>
+{% endblock content %}

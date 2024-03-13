@@ -6,6 +6,7 @@ urlpatterns = [
     path('import-student-data', imports.import_student_data, name='import-student-data'),
     path('import-courses-data', imports.import_courses_data, name='import-courses-data'),
     path('import-question-data', imports.import_question_data, name='import-question-data'),
+    path('import-action', imports.import_action, name='import-action'),
     path('import-theory-question-data', imports.import_theory_question_data, name='import-theory-question-data'),
     path('verify-student-data', imports.verify_data, name='verify-student-data'),
     path('verify-course-data', imports.verify_data1, name='verify-course-data'),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('excel-download1', views.excel_download1, name='excel-download1'),
     path('excel-download2', views.excel_download2, name='excel-download2'),
     path('excel-download3', views.excel_download3, name='excel-download3'),
+    path('excel-download4', views.excel_download4, name='excel-download4'),
     
     path('access_mode/<int:pk>', views.access_mode, name='access_mode'),
     

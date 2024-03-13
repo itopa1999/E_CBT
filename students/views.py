@@ -135,7 +135,7 @@ def exam_mode(request, pk):
         ExamMode.objects.create(student=request.user)
     if Submitted.objects.filter(student=request.user).exists():
         Submitted.objects.filter(student=request.user).delete()
-    if not Result.objects.filter(student=request.user).exists():
+    if not Result.objects.filter(student=request.user,exam = course).exists():
         Result.objects.create(
             student = request.user,
             exam = course,

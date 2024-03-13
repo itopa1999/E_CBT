@@ -31,6 +31,7 @@
               <tr>
                 <th>S/N</th>
                 <th>Name</th>
+                <th>Action</th>
               </tr>
             </thead>
             
@@ -39,6 +40,7 @@
               <tr>
                 <td>{{forloop.counter}}</td>
                 <td>{{i.name}}</td>
+                <td><a class="btn btn-success" href="{% url 'edit-level' i.id %}"><i class="bi bi-pencil"></i> edit</a></td>
               </tr>
               {% endfor %}
             </tbody>

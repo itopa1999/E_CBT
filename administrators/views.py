@@ -33,8 +33,8 @@ def is_student(user):
 
 def login_user(request):
     if request.method == "POST":
-        userid = request.POST.get('userid').lower()
-        user = authenticate(request, userid=userid, password=request.POST.get('password'))
+        userid = request.POST.get('userid').upper()
+        user = authenticate(request, userid=userid, password=request.POST.get('password').lower())
         if user is not None:
             login(request, user)
             user.login = True
@@ -877,3 +877,24 @@ def generate_unused_pin_pdf(request):
     response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="unused_pins.pdf"'
     return response
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def edit_level(request,pk):
+    pass
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def edit_department(request,pk):
+    pass
+
+
+@login_required(login_url='login_admin')
+@admin_only
+def actions(request):
+    return render(request, 'actions.html')
+
+
+

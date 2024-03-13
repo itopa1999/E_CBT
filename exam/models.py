@@ -27,16 +27,15 @@ class Course(models.Model):
 class Question(models.Model):
     course = models.ManyToManyField(Course,blank=True)
     marks=models.PositiveIntegerField()
-    question=models.TextField(max_length=1600,null=True, blank=True,unique=True,)
-    A=models.CharField(max_length=1000,null=True, blank=True)
-    B=models.CharField(max_length=1000,null=True, blank=True)
-    C=models.CharField(max_length=1000,null=True, blank=True)
-    D=models.CharField(max_length=1000,null=True, blank=True)
-    cat=(('A','A'),('B','B'),('C','C'),('D','D'))
-    answer=models.CharField(max_length=1000,choices=cat,null=True, blank=True)
+    question=models.TextField(max_length=160000,null=True, blank=True)
+    A=models.CharField(max_length=10000,null=True, blank=True)
+    B=models.CharField(max_length=100000,null=True, blank=True)
+    C=models.CharField(max_length=100000,null=True, blank=True)
+    D=models.CharField(max_length=100000,null=True, blank=True)
+    answer=models.CharField(max_length=1000,null=True, blank=True)
     
     def save(self, *args, **kwargs):
-        self.answer = self.answer.upper()
+        self.answer = (self.answer.strip()).upper()
         super().save(*args, **kwargs)
     class Meta:
         ordering = ['-question']

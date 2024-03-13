@@ -240,23 +240,25 @@ options: {
 
 
 <script>
-function deleteCookiesExceptOne(cookieToKeep) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        const [name, value] = cookie.split('=');
-        if (name !== cookieToKeep) {
-            // Delete the cookie by setting an expired date in the past
-            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-        }
-    }
-}
+  function deleteCookiesExceptOne(cookieToKeep) {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          const [name, value] = cookie.split('=');
+          if (name !== cookieToKeep) {
+              // Delete the cookie by setting an expired date in the past
+              document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+          }
+      }
+  }
+  
+  // Example usage:
+  // Delete all cookies except "myCookie"
+  deleteCookiesExceptOne(["sessionid"]);
+  
+  localStorage.clear();
+  </script>
 
-// Example usage:
-// Delete all cookies except "myCookie"
-deleteCookiesExceptOne(["sessionid"]);
 
-localStorage.clear();
-</script>
 
       {% endblock content %}

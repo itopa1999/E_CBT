@@ -43,8 +43,10 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         self.first_name = self.first_name.upper()
         self.last_name = self.last_name.upper()
+        self.userid = self.userid.upper()
         if not self.id and not self.password:
             self.set_password(self.last_name.lower())
+        #
 
         super().save(*args, **kwargs)
 

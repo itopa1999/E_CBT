@@ -11,6 +11,8 @@ class UserFile(resources.ModelResource):
 class QuestionFile(resources.ModelResource):
     class Meta:
         model = Question
+        #fields = ['question','A','B','C','D','answer','marks']
+        
         
 
 
