@@ -382,9 +382,13 @@ def filter_results_download(request):
     result = Result.objects.all()
     myFilter=ResultFilter(request.GET, queryset=result)
     result=myFilter.qs
-    
+    if result.exists():
+        objects = result.first()
+        course_name = getattr(objects, 'exam')
+    else:
+        course_name = 'result'
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename ="Reult.csv"'
+    response['Content-Disposition'] = f'attachment; filename ="{course_name}.csv"'
     
     csv_writer = csv.writer(response)
     header_row = [field_name.verbose_name for field_name in Result._meta.fields]
@@ -881,20 +885,38 @@ def generate_unused_pin_pdf(request):
 
 @login_required(login_url='login_admin')
 @admin_only
-def edit_level(request,pk):
-    pass
-
+def edit_level(request):
+    if request.method == 'POST':
+        try:
+            level = Level.objects.get(id=request.POST.get('id'))
+            level.name = request.POST.get('level')
+            level.save()
+            messages.success(request, str(level.name) + ' has been updated successfully')
+        except:
+            messages.error(request, str(level.name) + ' already exists in the database')
+        return redirect('levels')
 
 @login_required(login_url='login_admin')
 @admin_only
-def edit_department(request,pk):
-    pass
+def edit_department(request):
+    if request.method == 'POST':
+        try:
+            department = Department.objects.get(id=request.POST.get('id'))
+            level = Level.objects.get(id=request.POST.get('level'))
+            department.name = request.POST.get('department')
+            department.level = level 
+            department.save()
+            messages.success(request, str(department.name) + ' has been updated successfully')
+        except:
+            messages.error(request, str(department.name) + ' already exists in the database')
+        return redirect('department')
 
 
 @login_required(login_url='login_admin')
 @admin_only
 def actions(request):
-    return render(request, 'actions.html')
+    course = Course.objects.all()
+    return render(request, 'actions.html',{'course':course})
 
 
 

@@ -40,16 +40,25 @@
                 </div>
                 <div class="mb-3 mt-3"  >
                   <label for="">Command and Action</label>
-                  <select class="select" name='action' required>
+                  <select class="select" id="mySelect" name='action' required>
                     <option value="">---- Choose Action ----</option>
                     
-                    <option class="mt-2" value="activate">Activate Student(s) to write exam</option>
-                    <option class="mt-2" value="deactivate">Dectivate Student(s) from writing exam</option>
-                    <option class="mt-2" value="reset">Reset Student(s) scores to retake exam</option>
-                    <option class="mt-2" value="delete">Delete Student(s) from database with records</option>
-                    <option class="mt-2" value="{{i.name}}">{{i.name}}</option>
+                    <option class="mt-3" value="activate">Activate Student(s) to write exam</option>
+                    <option class="mt-3" value="deactivate">Dectivate Student(s) from writing exam</option>
+                    <option class="mt-3" value="reset">Reset Student(s) scores to retake exam</option>
+                    <option class="mt-3" value="delete">Delete Student(s) from database with records</option>
                     
                   </select>
+                  <div class="mb-3 mt-3" id="course" style="display: none;">
+                    <label for="">Choose Course</label>
+                    <select class="select" name='course'>
+                      <option value="">---- Choose Course ----</option>
+                      {% for i in course %}
+                      <option class="mt-3" value="{{i.id}}">{{i.name}}</option>
+                      {% endfor %}
+                      
+                    </select>
+                  </div>
                 </div>
                 <button type="submit" class="btn btn-success" >Upload</button>
               </form>
@@ -61,4 +70,22 @@
 
     </div>
 </section>
+<script>
+    var selectElement = document.getElementById("mySelect");
+    selectElement.addEventListener("change", function() {
+        if (this.value === 'reset'){
+          var x = document.getElementById("course");
+          x.style.display = "block"
+        }
+        else {
+          var x = document.getElementById("course");
+          x.style.display = "none"
+        }
+    })
+    
+
+
+    
+
+</script>
 {% endblock content %}

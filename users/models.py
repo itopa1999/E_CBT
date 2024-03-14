@@ -11,9 +11,9 @@ class Level(models.Model):
     name = models.CharField(max_length=150,unique=True, null=True,blank=True)
     
     class Meta:
-        ordering = ['-name']
+        ordering = ['name']
         indexes = [
-            models.Index(fields=['-name']),
+            models.Index(fields=['name']),
         ]
         
         

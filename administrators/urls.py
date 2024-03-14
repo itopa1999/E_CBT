@@ -97,8 +97,8 @@ urlpatterns = [
     path('generate_unused_pin_pdf', views.generate_unused_pin_pdf, name='generate_unused_pin_pdf'),
     path('expire_pins', views.expire_pins, name='expire_pins'),
     
-    path('edit-level/<int:pk>', views.edit_level, name='edit-level'),
-    path('edit_department/<int:pk>', views.edit_department, name='edit_department'),
+    path('edit-level', views.edit_level, name='edit-level'),
+    path('edit_department', views.edit_department, name='edit_department'),
     path('actions', views.actions, name='actions'),
     path('expire_pins', views.expire_pins, name='expire_pins'),
     path('expire_pins', views.expire_pins, name='expire_pins'),

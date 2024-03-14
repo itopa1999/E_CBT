@@ -343,11 +343,17 @@ def action(request, imported_data):
             
     for user in userid_values:
         user_upper = user.upper()
-        print(user_upper)
+        if not User.objects.filter(userid__iexact=user_upper).exists():
+            messages.error(request,f"User {user_upper} is not found in the database")
+            return redirect('actions')
+            
+    for user in userid_values:
+        user_upper = user.upper()
+        return user_upper
         
         
 
-
+from exam.models import Result, Course
 
 
 @login_required(login_url='login_admin')
@@ -378,14 +384,45 @@ def import_action(request):
         print(user_counts)
        
         if request.POST.get('action') == 'activate':
-            student = User.objects.filter(groups=Group.objects.get(name='student'))
-            student.update(exam=True)
+            userid_values = [row[0] for row in imported_data]
+            for user in userid_values:
+                student = User.objects.filter(userid=user.upper())
+                student.update(exam=True)
+            messages.success(request, 'selected students has been activate to now write exam')
+            return redirect('actions')
+        
+        
         elif request.POST.get('action') == 'deactivate':
-            pass
+            userid_values = [row[0] for row in imported_data]
+            for user in userid_values:
+                student = User.objects.filter(userid=user.upper())
+                student.update(exam=False)
+            messages.success(request, 'selected students has been deactivate from now writing exam')
+            return redirect('actions')
+        
+        
         elif request.POST.get('action') == 'reset':
-            pass
+            if request.POST.get('course') != '':
+                course = Course.objects.get(id=request.POST.get('course'))
+                userid_values = [row[0] for row in imported_data]
+                for user in userid_values:
+                    student = User.objects.get(userid=user.upper())
+                    result = Result.objects.filter(student=student.id, exam=request.POST.get('course'))
+                    result.delete()
+                messages.success(request, 'selected students ' + str(course.name) + ' exams has been reset')
+                return redirect('actions')
+            else:
+                messages.error(request, 'Please Select one course, Course cannot be blank')
+                return redirect('actions')
+            
+            
         elif request.POST.get('action') == 'delete':
-            pass
+            userid_values = [row[0] for row in imported_data]
+            for user in userid_values:
+                student = User.objects.filter(userid=user.upper())
+                student.delete()
+            messages.success(request, 'selected students has been delete from the database')
+            return redirect('actions')
         else:
             messages.error(request, 'invalid command or action')
         return redirect('actions')
